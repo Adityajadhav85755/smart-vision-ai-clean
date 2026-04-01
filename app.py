@@ -541,12 +541,44 @@ def upload_file():
         
         if file and allowed_file(file.filename):
             try:
-                filename = secure_filename(file.filename)
+                # Generate unique filename to prevent conflicts
+                import uuid
+                from datetime import datetime
+                import glob
+                
+                original_filename = secure_filename(file.filename)
+                file_extension = original_filename.rsplit('.', 1)[1].lower() if '.' in original_filename else ''
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                unique_id = str(uuid.uuid4())[:8]
+                filename = f"{timestamp}_{unique_id}.{file_extension}" if file_extension else f"{timestamp}_{unique_id}"
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                print(f"🔍 Generated unique filename: {filename}")
                 print(f"🔍 Saving to: {filepath}")
                 
                 # Ensure upload directory exists
                 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+                
+                # Clean up old files to prevent disk space issues (keep only last 50 files)
+                try:
+                    upload_dir = app.config['UPLOAD_FOLDER']
+                    files = glob.glob(os.path.join(upload_dir, '*'))
+                    files = [f for f in files if os.path.isfile(f) and not f.startswith('annotated_')]
+                    files.sort(key=os.path.getmtime, reverse=True)
+                    
+                    # Keep only the 50 most recent files
+                    if len(files) > 50:
+                        for old_file in files[50:]:
+                            try:
+                                os.remove(old_file)
+                                # Also remove corresponding annotated file if exists
+                                annotated_file = os.path.join(upload_dir, f"annotated_{os.path.basename(old_file)}")
+                                if os.path.exists(annotated_file):
+                                    os.remove(annotated_file)
+                                print(f"🗑️ Cleaned up old file: {os.path.basename(old_file)}")
+                            except Exception as cleanup_error:
+                                print(f"⚠️ Could not clean up file {old_file}: {cleanup_error}")
+                except Exception as cleanup_error:
+                    print(f"⚠️ Cleanup failed: {cleanup_error}")
                 
                 # Save file with error handling
                 try:
