@@ -14,7 +14,7 @@ import json
 import re
 from datetime import datetime
 # ==================== GEMINI AI CONFIGURATION ====================
-GEMINI_API_KEY = "AIzaSyBP1pqnYDtveBGHI2b5NYkdKahleTpTSwg"  # Replace with valid key
+GEMINI_API_KEY = "AIzaSyATDU4sM8KhG3qOJnY2yoXOhTZcldlEIqU"  # Replace with valid key
 print("=" * 60)
 print("🔧 GEMINI INITIALIZATION")
 print("=" * 60)
@@ -113,15 +113,34 @@ Return ONLY valid JSON in this exact format, no other text:
             print("❌ Empty response from Gemini")
             return None
         print(f"📄 Response preview: {response.text[:200]}...")
-        # Parse JSON from response
+        
+        # Check for quota exceeded or rate limit errors
+        response_text = response.text.lower()
+        if any(keyword in response_text for keyword in ['quota', 'rate limit', 'exceeded', 'limit', 'retry', 'blocked']):
+            print("❌ Gemini API quota/rate limit exceeded")
+            return None
+        
+        # Parse JSON from response with better error handling
         json_match = re.search(r'\{.*\}', response.text, re.DOTALL)
         if json_match:
             json_str = json_match.group()
             try:
+                # Validate JSON structure before parsing
+                if not json_str.strip().startswith('{') or not json_str.strip().endswith('}'):
+                    print("❌ Invalid JSON structure")
+                    return None
+                
                 recommendations = json.loads(json_str)
                 objects = recommendations.get('objects', [])
+                
+                # Validate the structure of returned objects
+                if not isinstance(objects, list):
+                    print("❌ Invalid objects structure in JSON")
+                    return None
+                
                 print(f"✅ Successfully parsed JSON with {len(objects)} objects")
                 return objects
+                
             except json.JSONDecodeError as e:
                 print(f"❌ JSON parse error: {e}")
                 print(f"Raw JSON string: {json_str[:200]}")
@@ -577,7 +596,7 @@ def upload_file():
                     print(f"❌ Image annotation failed: {str(img_error)}")
                     # Continue without annotation
                 
-                # Create base64 response
+                # Create base64 response with comprehensive error handling
                 try:
                     annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], f"annotated_{filename}")
                     if os.path.exists(annotated_path):
@@ -588,16 +607,56 @@ def upload_file():
                         with open(filepath, 'rb') as img_file:
                             img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
                     
+                    # Validate detections before creating response
+                    validated_detections = []
+                    for det in detections:
+                        try:
+                            # Ensure all required fields are present and valid
+                            validated_det = {
+                                'class': str(det.get('class', 'Unknown')),
+                                'confidence': float(det.get('confidence', 0.0)),
+                                'bbox': [int(x) for x in det.get('bbox', [0, 0, 0, 0])],
+                                'status': str(det.get('status', 'unknown')),
+                                'recommendation': str(det.get('recommendation', 'No recommendation available'))
+                            }
+                            
+                            # Add smart recommendations if available
+                            if 'smart_recommendations' in det and det['smart_recommendations']:
+                                validated_det['smart_recommendations'] = det['smart_recommendations']
+                            
+                            validated_detections.append(validated_det)
+                        except Exception as det_error:
+                            print(f"⚠️ Skipping invalid detection: {det_error}")
+                            continue
+                    
+                    # Create response object
                     result = {
                         'success': True,
                         'filename': filename,
-                        'detections': detections,
+                        'detections': validated_detections,
                         'summary': summary,
-                        'total_detections': len(detections),
+                        'total_detections': len(validated_detections),
                         'image_data': f'data:image/jpeg;base64,{img_base64}'
                     }
-                    print(f"✅ Response prepared successfully")
-                    return jsonify(result)
+                    
+                    # Validate the entire response object
+                    try:
+                        # Test JSON serialization
+                        json_str = json.dumps(result)
+                        print(f"✅ Response JSON validation passed ({len(json_str)} chars)")
+                        return jsonify(result)
+                    except Exception as json_error:
+                        print(f"❌ Response JSON validation failed: {json_error}")
+                        # Return minimal valid response
+                        return jsonify({
+                            'success': True,
+                            'filename': filename,
+                            'detections': [],
+                            'summary': ['Error in response formatting'],
+                            'total_detections': 0,
+                            'image_data': f'data:image/jpeg;base64,{img_base64}'
+                        })
+                        
                 except Exception as response_error:
                     print(f"❌ Response preparation failed: {str(response_error)}")
                     return jsonify({'error': f'Response preparation failed: {str(response_error)}'}), 500
