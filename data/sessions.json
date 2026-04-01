@@ -1,0 +1,1747 @@
+{
+    "abcd@mail.com": {
+        "sessions": [
+            {
+                "session_id": "966da232-ddd7-4919-a54e-0c5204502241",
+                "login_time": "2026-02-08T05:54:54.292260",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "login",
+                        "time": "2026-02-08T05:54:54.299260",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a9a77334-ec93-4a6c-b178-cd982b53c0d8",
+                "login_time": "2026-04-01T10:29:23.764901",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T10:29:23.780103",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "b74a7c33-ebbf-4b06-9ce3-4a6d3a7e2de5",
+                "login_time": "2026-04-01T10:29:57.656765",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T10:29:57.673681",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a0580cb7-591d-4f66-979f-e517948e43f2",
+                "login_time": "2026-04-01T11:37:47.819099",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-04-01T11:37:47.841028",
+                        "details": null
+                    }
+                ]
+            }
+        ]
+    },
+    "elonm6025@gmail.com": {
+        "sessions": [
+            {
+                "session_id": "b3e7035d-0812-4e4d-a79a-3f2700431471",
+                "login_time": "2026-02-08T16:55:07.359572",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "login",
+                        "time": "2026-02-08T16:55:07.359572",
+                        "details": null
+                    },
+                    {
+                        "type": "model_training_started",
+                        "time": "2026-02-08T17:00:05.263359",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "aae6f985-4031-4573-8122-0f1451769fc7",
+                "login_time": "2026-02-08T17:39:07.244005",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "login",
+                        "time": "2026-02-08T17:39:07.249812",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c17cce8d-163b-4fb6-8836-5d0843796542",
+                "login_time": "2026-02-08T17:39:52.362918",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "login",
+                        "time": "2026-02-08T17:39:52.366794",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "6d45fe58-5e1f-4f6b-9faf-02583542eac6",
+                "login_time": "2026-02-08T17:39:58.540407",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "login",
+                        "time": "2026-02-08T17:39:58.542408",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "16a513a4-acb5-41f3-97c1-00befa1772f8",
+                "login_time": "2026-02-08T17:41:54.286009",
+                "logout_time": "2026-02-08T17:43:53.139116",
+                "activities": [
+                    {
+                        "type": "login",
+                        "time": "2026-02-08T17:41:54.371433",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-08T17:43:53.142118",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "7cd9bce3-1ebe-4c7a-843a-6a2ef5ee59b8",
+                "login_time": "2026-02-08T17:44:40.244982",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-08T17:44:40.251646",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "6099080a-fc90-4955-a0d7-04e4e87b018d",
+                "login_time": "2026-02-10T15:31:29.255399",
+                "logout_time": "2026-02-10T15:31:35.945979",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:31:29.271810",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T15:31:35.952091",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "02b2de2a-354c-40ad-a171-2bf8d7376b24",
+                "login_time": "2026-02-10T15:32:03.865059",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T15:32:03.869223",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "bf9d477e-bc2a-463a-9268-13ebd122c89d",
+                "login_time": "2026-02-10T15:34:02.185997",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:34:02.195811",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "084f111c-e12e-4cfb-b798-a28dfccd3b4e",
+                "login_time": "2026-02-10T15:48:52.889086",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:48:52.895763",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "da34b4d1-5438-4556-9458-763efc7e3987",
+                "login_time": "2026-02-10T15:50:42.304993",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:50:42.311167",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c197b043-9755-436e-ad19-05cfb7b7e824",
+                "login_time": "2026-02-10T15:51:22.226783",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T15:51:22.233924",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "af686d7b-0e35-464b-b172-0b3d0c243e39",
+                "login_time": "2026-02-10T15:57:29.548231",
+                "logout_time": "2026-02-10T16:02:21.328763",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:57:29.560424",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T16:02:21.341717",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4872dcf6-5e00-4da8-8e61-3bb5957b208a",
+                "login_time": "2026-02-10T16:07:43.346232",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T16:07:43.358510",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4a13f79a-2b56-47eb-95e9-8b4a7c5ff879",
+                "login_time": "2026-02-10T16:59:57.038311",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T16:59:57.041292",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "74356c2b-e1e6-4a97-860d-3b3bc7ddc666",
+                "login_time": "2026-02-10T17:07:35.111240",
+                "logout_time": "2026-02-10T17:10:02.963083",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:07:35.124540",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T17:10:02.970543",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "675904bc-2c15-44dc-909f-1c9ab26aab7f",
+                "login_time": "2026-02-10T17:10:18.661726",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T17:10:18.668058",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "1c6b9471-e7b1-4393-b835-0bcbb3d4d03e",
+                "login_time": "2026-02-10T17:22:36.768886",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:22:36.772819",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "54ae06e9-7cc2-4d8e-9a2c-80e6bd6277ae",
+                "login_time": "2026-02-10T17:22:51.207175",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:22:51.213990",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "03ab5fd6-f653-418f-88fe-5ca93107640f",
+                "login_time": "2026-02-10T17:23:16.990966",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T17:23:16.998285",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "f26a8914-a899-43cf-8209-4e46f9548b3d",
+                "login_time": "2026-02-10T17:54:55.381455",
+                "logout_time": "2026-02-10T17:55:00.030946",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:54:55.405782",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T17:55:00.054449",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4341fe20-62f1-480d-9f07-42fc380f12c5",
+                "login_time": "2026-02-10T17:55:19.841504",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T17:55:19.850884",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a89f322a-cbed-4872-a49b-8d3376aeb899",
+                "login_time": "2026-02-10T18:10:57.685537",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T18:10:57.701446",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "bab5e130-e1c4-4181-b9d7-215b39410e70",
+                "login_time": "2026-02-10T18:29:25.412394",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T18:29:25.425043",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "e8e04d8a-d98e-4817-8f04-d0eb89763a7c",
+                "login_time": "2026-02-12T18:08:54.966754",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-12T18:08:54.990569",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "e9bd6752-66e7-4fe5-85ca-4dd69c6624e3",
+                "login_time": "2026-02-14T07:02:09.587411",
+                "logout_time": "2026-02-14T07:02:46.999142",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-14T07:02:09.602706",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-14T07:02:47.013672",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "fc15666f-f77c-4516-99eb-97ae594b6447",
+                "login_time": "2026-02-14T07:03:04.703310",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-14T07:03:04.714736",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "9b7930e5-5305-4b36-940a-4f5327f123d6",
+                "login_time": "2026-02-26T16:24:30.846245",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-26T16:24:30.892715",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "bfa93849-86c8-45b6-bb03-5f78acc07479",
+                "login_time": "2026-02-26T16:25:34.360485",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-26T16:25:34.390207",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "9b7a0a63-e1b1-478a-80f9-5128c797e919",
+                "login_time": "2026-02-26T16:26:27.526193",
+                "logout_time": "2026-02-26T16:27:35.248170",
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-26T16:26:27.559579",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-26T16:27:35.366357",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "5629e651-5ceb-41a1-ade0-bac67a540ea4",
+                "login_time": "2026-03-01T12:55:29.128058",
+                "logout_time": "2026-03-01T12:55:47.635121",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-01T12:55:29.155257",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-01T12:55:47.656253",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c9bd8db9-04c1-4464-9579-bbb54b0c8a4f",
+                "login_time": "2026-03-01T12:55:58.984233",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-01T12:55:58.993688",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "48ea6853-7968-4f68-ae7c-b038b0b6b5d4",
+                "login_time": "2026-03-01T19:03:17.531873",
+                "logout_time": "2026-03-01T19:03:44.177578",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-01T19:03:17.561178",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-01T19:03:44.188536",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "ace1d354-b7f1-4006-8f35-f769b307769b",
+                "login_time": "2026-03-01T19:22:10.595854",
+                "logout_time": "2026-03-01T19:22:17.560127",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-01T19:22:10.627365",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-01T19:22:17.577776",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0e691724-07a5-42ee-b194-2508d31bb057",
+                "login_time": "2026-03-02T15:26:04.326688",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-02T15:26:04.342396",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "2dbcc117-b76d-4990-aaa6-084e7c4cbd83",
+                "login_time": "2026-03-02T15:26:10.958400",
+                "logout_time": "2026-03-02T15:26:18.423645",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-02T15:26:10.966073",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-02T15:26:18.431851",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "bb1b31bf-10ca-4299-b211-f66d07aacaf8",
+                "login_time": "2026-03-02T15:26:28.936662",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-02T15:26:28.952761",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a00dacd0-0ce9-4d9d-a84b-63ff53de050e",
+                "login_time": "2026-03-02T18:17:47.766267",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-02T18:17:47.799361",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4de1f1ca-86a6-437b-aa40-700b37c189b2",
+                "login_time": "2026-03-02T18:50:08.189382",
+                "logout_time": "2026-03-02T18:50:43.895215",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-02T18:50:08.209051",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-02T18:50:43.906849",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "5cc4f945-1835-461b-a157-e7e682591e03",
+                "login_time": "2026-03-02T19:00:42.681165",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-02T19:00:42.692848",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "58d64b62-8add-40c9-9a84-88461d154e8d",
+                "login_time": "2026-03-02T19:18:05.568971",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-02T19:18:05.588267",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a578f833-ca37-488c-a2fc-c2a10f328943",
+                "login_time": "2026-03-02T19:41:20.696517",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-02T19:41:20.713793",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "bcf1de26-653a-4fff-942c-e45aa53c60ff",
+                "login_time": "2026-03-02T19:45:17.816803",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-02T19:45:17.832852",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d1b5b2fd-5679-4530-a1ec-b96fa58266c8",
+                "login_time": "2026-03-02T19:54:15.620807",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-02T19:54:15.632855",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "db5e2599-b87b-4f4f-b9ae-8bf0b66cb1eb",
+                "login_time": "2026-03-07T10:43:41.447036",
+                "logout_time": "2026-03-07T10:43:48.614757",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-07T10:43:41.469554",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-07T10:43:48.634236",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d70e00a8-6425-4bc5-974c-28b8eb7f5726",
+                "login_time": "2026-03-07T10:43:55.041007",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-07T10:43:55.069952",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0cc4b2c6-bbd7-4abc-8e4c-f2bcfd3fc814",
+                "login_time": "2026-03-09T03:33:38.967888",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-09T03:33:38.978209",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "5d9981ba-6381-4b2d-b21f-951ce311084f",
+                "login_time": "2026-03-09T03:42:35.885329",
+                "logout_time": "2026-03-09T03:46:22.740371",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-09T03:42:35.899488",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-09T03:46:22.757044",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d352b821-61d8-428c-855d-35fa57bd3fed",
+                "login_time": "2026-03-09T03:46:38.992924",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-09T03:46:39.003448",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "63847866-47c6-4d94-a7bc-ff1d3dc3de6a",
+                "login_time": "2026-03-09T05:11:15.822610",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-09T05:11:15.861906",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4c67f9b2-1c4c-4260-9795-ecc16df81100",
+                "login_time": "2026-03-09T06:08:32.690819",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-09T06:08:32.868076",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "8c3fb9df-3e9b-40a9-b405-a6f0c60ea78e",
+                "login_time": "2026-03-09T06:09:56.461898",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-09T06:09:56.475273",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d7bed96f-04d6-44a8-b551-8654c43ba78e",
+                "login_time": "2026-03-29T13:07:38.854334",
+                "logout_time": "2026-03-29T13:12:47.726614",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-29T13:07:38.879665",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-29T13:12:47.745073",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "b3905118-9fad-4f44-8c9b-964ee58385e0",
+                "login_time": "2026-03-29T13:18:43.280325",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-29T13:18:43.310640",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0a30c3e5-4fdd-4f75-b4e4-b79f8b18957b",
+                "login_time": "2026-03-29T13:22:21.054198",
+                "logout_time": "2026-03-29T13:29:57.426189",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-29T13:22:21.071946",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-29T13:29:57.449574",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "cc5d3eda-df22-4d9a-9aaf-f293f88fda40",
+                "login_time": "2026-03-29T13:40:04.820018",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-29T13:40:04.837516",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "ca5a5df8-cb65-49fc-b92f-8a6f8092f30f",
+                "login_time": "2026-03-30T17:15:19.582822",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-30T17:15:19.598983",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "7cb0f24a-2caa-4f51-9b57-68fe00d386cc",
+                "login_time": "2026-03-30T17:15:42.164710",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-30T17:15:42.182043",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "6a14e5b0-da81-4b8c-989e-6d61f12780f5",
+                "login_time": "2026-03-30T17:24:58.916052",
+                "logout_time": "2026-03-30T17:26:57.772531",
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-30T17:24:58.934741",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-30T17:26:57.785188",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "75a493d4-2769-45b8-a1db-20d6c5b8d4ed",
+                "login_time": "2026-03-30T17:29:06.266287",
+                "logout_time": "2026-03-30T17:50:13.392866",
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-30T17:29:06.280461",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-30T17:50:13.406801",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "e0fb14e2-c3dc-4ed2-8936-2a9db8a09d77",
+                "login_time": "2026-03-30T17:57:26.612861",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-30T17:57:26.628613",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "7d476763-83a0-4a75-95d9-eb9523b91c85",
+                "login_time": "2026-03-30T18:26:37.876351",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-30T18:26:37.893428",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "cae74eb6-e781-4ffe-91a2-363adf8f61f8",
+                "login_time": "2026-03-30T18:38:16.000122",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-30T18:38:16.014378",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d43729b3-2587-4ac6-a0ea-e18313ff3544",
+                "login_time": "2026-03-30T20:00:30.692966",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-30T20:00:30.704918",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "2eb56aa1-0d9c-405a-8f34-9ecfe19b8da7",
+                "login_time": "2026-03-30T21:07:07.249824",
+                "logout_time": "2026-03-30T21:07:18.984545",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-30T21:07:07.264614",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-30T21:07:19.001562",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "e2e2eb0f-0c55-4d13-af5f-f4d7e07db5c6",
+                "login_time": "2026-03-31T12:46:52.474309",
+                "logout_time": "2026-03-31T12:56:07.475396",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T12:46:52.499851",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-31T12:56:07.523522",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "ca6b7554-e857-44c7-84d1-a05343889d7c",
+                "login_time": "2026-03-31T12:56:11.258095",
+                "logout_time": "2026-03-31T13:10:43.237342",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T12:56:11.271778",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-31T13:10:43.263526",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "65ee9985-fb78-4ded-b6ea-bd59d649e221",
+                "login_time": "2026-03-31T13:18:07.060786",
+                "logout_time": "2026-03-31T13:22:52.974212",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T13:18:07.092203",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-31T13:22:53.287542",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "39a3a31e-2a4f-4077-82bc-b188502eaab7",
+                "login_time": "2026-03-31T13:33:39.092766",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T13:33:39.113459",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c66d38cf-3b1c-45e7-8e27-9066e6654f9b",
+                "login_time": "2026-03-31T13:51:24.852110",
+                "logout_time": "2026-03-31T14:10:06.838399",
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-31T13:51:24.867248",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-31T14:10:06.890413",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "08fd46a6-779f-4034-b631-e332bceedada",
+                "login_time": "2026-03-31T14:10:24.173062",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-31T14:10:24.199907",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "924854d9-6393-4603-b6be-9160ec5e2384",
+                "login_time": "2026-03-31T14:20:11.096484",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T14:20:11.119298",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "613e13b0-067e-45d4-b4d6-878f2e95ec34",
+                "login_time": "2026-03-31T14:22:57.009419",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T14:22:57.031101",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "56593b62-dc9f-41a9-87fa-5d427779d87a",
+                "login_time": "2026-03-31T19:12:19.979033",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T19:12:20.259478",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "8cd5c812-5e15-4c46-b858-b9cdbeb774aa",
+                "login_time": "2026-03-31T19:26:41.689036",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T19:26:41.756699",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "7210aea2-9a6c-4ce1-aa54-d413dab05913",
+                "login_time": "2026-04-01T09:22:55.446772",
+                "logout_time": "2026-04-01T09:37:46.720826",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-04-01T09:22:55.473242",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-04-01T09:37:46.752820",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "54ca13cc-8f24-4866-8ec9-32e49cc7b0b0",
+                "login_time": "2026-04-01T09:37:58.893193",
+                "logout_time": "2026-04-01T09:47:09.918556",
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T09:37:58.907664",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-04-01T09:47:09.952928",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "2df3a567-3e56-49bf-85b8-59cf8bd8f96b",
+                "login_time": "2026-04-01T09:47:30.592792",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T09:47:30.645586",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "7bca7771-1143-4284-84b8-e6253d83c665",
+                "login_time": "2026-04-01T10:27:20.124232",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T10:27:20.142611",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "33ab0e65-ebc4-4365-a60c-f3b8450055e1",
+                "login_time": "2026-04-01T11:41:18.768429",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T11:41:18.786262",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "98c9fc32-e7bc-4387-82d7-f0012cd2016e",
+                "login_time": "2026-04-01T17:58:53.804712",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-04-01T17:58:53.828424",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "51320b4d-e60a-4f11-acd2-0d47c73e9768",
+                "login_time": "2026-04-01T18:16:19.883939",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T18:16:19.965762",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "6609a94d-8e87-4ec9-bb76-1a9c4f588c01",
+                "login_time": "2026-04-01T19:09:27.702777",
+                "logout_time": "2026-04-01T20:37:47.456036",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-04-01T19:09:27.718560",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-04-01T20:37:47.509730",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c7ab3872-ca65-41ca-8499-98c83457dc66",
+                "login_time": "2026-04-01T20:38:22.351575",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T20:38:22.371048",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4623c974-0403-4f50-9cdf-dc149cc5e9f2",
+                "login_time": "2026-04-01T20:39:54.441247",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-04-01T20:39:54.470591",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "e10f7767-859a-4070-8316-085d767daa64",
+                "login_time": "2026-04-01T21:01:06.802073",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-04-01T21:01:06.866087",
+                        "details": null
+                    }
+                ]
+            }
+        ]
+    },
+    "elonm@gmail.com": {
+        "sessions": [
+            {
+                "session_id": "60ff47a7-7876-4a93-8027-782aab34adb8",
+                "login_time": "2026-02-08T17:46:37.389774",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-08T17:46:37.395775",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "84a0a78b-8f2d-473b-985c-015922c45280",
+                "login_time": "2026-02-10T14:50:18.038875",
+                "logout_time": "2026-02-10T14:50:28.465687",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T14:50:18.042408",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T14:50:28.475805",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c07c3501-07ab-41ab-a3f4-dc8b1d3f4c6a",
+                "login_time": "2026-02-10T14:58:31.530959",
+                "logout_time": "2026-02-10T14:59:03.177241",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T14:58:31.535051",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T14:59:03.180084",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "5081a886-01d0-42c0-84aa-770b19b1e826",
+                "login_time": "2026-02-10T15:03:40.121227",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:03:40.135396",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d2e1e4de-1c01-4e48-a18c-433040a6f04a",
+                "login_time": "2026-02-10T15:08:20.332929",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:08:20.336450",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c27b9c37-d3ec-48c0-9967-1a85250fe728",
+                "login_time": "2026-02-10T15:13:30.472187",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T15:13:30.488134",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4198e2b8-2f48-464b-a144-25c7d09d93b8",
+                "login_time": "2026-02-10T15:14:07.071992",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:14:07.075972",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "5dec643a-637a-45c6-8d4c-705758a61cec",
+                "login_time": "2026-02-10T15:45:58.757268",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:45:58.773075",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "27e38117-c593-4d0d-9436-d3c9879058e0",
+                "login_time": "2026-02-10T15:47:34.178476",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T15:47:34.188082",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "cef3d073-75d0-4980-bac6-213316b73d2f",
+                "login_time": "2026-02-10T17:26:46.979552",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:26:46.985573",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "aae7255d-995b-4108-8e5d-4df680d32c77",
+                "login_time": "2026-02-10T17:27:07.284206",
+                "logout_time": "2026-02-10T17:28:12.179267",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:27:07.294475",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T17:28:12.186122",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "ceda5db3-951f-4594-9cd6-0e2b2f38e46b",
+                "login_time": "2026-02-10T17:35:33.463262",
+                "logout_time": "2026-02-10T17:35:44.056836",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:35:33.491416",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T17:35:44.066841",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c9050c0f-b43f-4ca4-b798-161b49501967",
+                "login_time": "2026-02-10T17:35:50.502114",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T17:35:50.516457",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "04cbf94b-b9d0-4cff-8e55-453677a30712",
+                "login_time": "2026-02-10T17:40:20.177477",
+                "logout_time": "2026-02-10T17:40:25.273919",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T17:40:20.185937",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-10T17:40:25.283922",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "10414b7c-c6e6-4151-8fad-20dd617c0ba4",
+                "login_time": "2026-02-10T17:40:27.774960",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T17:40:27.784999",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "1202a3f8-28e8-4581-9d81-e00fd0cda3e2",
+                "login_time": "2026-02-10T18:44:37.104554",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T18:44:37.116184",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "aa752ef9-a8e9-4173-9a15-46968d770ad2",
+                "login_time": "2026-02-10T18:44:55.059910",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T18:44:55.073527",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "38438f10-ef33-421b-ac40-10e366d158c5",
+                "login_time": "2026-02-10T18:47:25.193051",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T18:47:25.216764",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a8e58c9f-7727-4a8a-9691-ff38bd985d21",
+                "login_time": "2026-02-10T18:50:46.575671",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T18:50:46.591493",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d96f3942-3373-435b-9701-1dc7811413f3",
+                "login_time": "2026-02-10T18:55:19.906202",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-10T18:55:20.009993",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0ca6abb7-71fb-4684-bad8-fce22c412b09",
+                "login_time": "2026-02-10T18:56:58.188819",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-10T18:56:58.245962",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "3a5dd2b7-bb09-40b9-9f6e-569be33a53d7",
+                "login_time": "2026-02-11T13:28:53.351937",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-11T13:28:53.364701",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "d25ac131-9358-4557-bd30-fd3e2e3b7164",
+                "login_time": "2026-02-11T13:29:37.343630",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-11T13:29:37.353764",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "39455645-7c5d-433c-bc15-6cedee415e96",
+                "login_time": "2026-02-12T17:54:29.541787",
+                "logout_time": "2026-02-12T17:57:28.262415",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-12T17:54:29.555503",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-12T17:57:28.283257",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "66e1b5c0-58b8-4eee-9f53-dcdf7c013e76",
+                "login_time": "2026-02-12T17:57:35.190491",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-12T17:57:35.214109",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "b33f33c4-b029-462b-9f92-f4161d75733f",
+                "login_time": "2026-02-14T07:38:26.335940",
+                "logout_time": "2026-02-14T07:39:30.533184",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-14T07:38:26.343166",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-14T07:39:30.557769",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "c750b094-942e-4145-b56a-3b8cbd33122f",
+                "login_time": "2026-02-14T07:47:47.260334",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-14T07:47:47.279544",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4b40a178-01f9-4087-b04f-e98d6d5f6b3d",
+                "login_time": "2026-02-14T08:11:59.219789",
+                "logout_time": "2026-02-14T08:12:27.324574",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-14T08:11:59.238773",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-14T08:12:27.344619",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0956bc48-8e64-41cd-a929-c5ffdac75503",
+                "login_time": "2026-02-14T08:12:33.749302",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-14T08:12:33.769085",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "492cd115-1524-4f6b-94ad-01f17f049cad",
+                "login_time": "2026-02-14T08:12:57.538332",
+                "logout_time": "2026-02-14T08:13:03.123723",
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-02-14T08:12:57.552280",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-02-14T08:13:03.142243",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "353dc114-7dee-4623-8419-821343d1070d",
+                "login_time": "2026-02-14T08:13:09.659443",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-02-14T08:13:09.695476",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0b600bec-1a1d-4905-ad0d-2e767d277468",
+                "login_time": "2026-03-01T19:29:29.621966",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-01T19:29:29.636122",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "03a4c5e3-94e9-422e-a1c0-c0d25f92d17c",
+                "login_time": "2026-03-01T19:29:58.089939",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-01T19:29:58.113480",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "310edc8d-b481-4fe9-ac07-b79b678ad6f6",
+                "login_time": "2026-03-01T19:37:26.921537",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-01T19:37:26.938636",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "4bd0ba2f-32f6-4bd0-9db3-74e0382fb917",
+                "login_time": "2026-03-01T20:02:58.599831",
+                "logout_time": "2026-03-01T20:03:14.826049",
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-01T20:02:58.668367",
+                        "details": null
+                    },
+                    {
+                        "type": "logout",
+                        "time": "2026-03-01T20:03:14.833594",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "ec899084-ffdb-4f00-82bc-56e5719bbf00",
+                "login_time": "2026-03-01T20:09:14.186377",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-01T20:09:14.227420",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "90e381bc-0f63-41d7-8ae7-ed72b5cb0fff",
+                "login_time": "2026-03-01T20:09:26.380321",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-01T20:09:26.407928",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "a012bbdb-8451-4a53-962f-c40b5042169f",
+                "login_time": "2026-03-01T20:09:38.987820",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "admin_login",
+                        "time": "2026-03-01T20:09:39.015228",
+                        "details": null
+                    }
+                ]
+            },
+            {
+                "session_id": "0e4946cf-4236-4e2b-b405-70e0a0824669",
+                "login_time": "2026-03-31T13:29:27.488390",
+                "logout_time": null,
+                "activities": [
+                    {
+                        "type": "student_login",
+                        "time": "2026-03-31T13:29:27.504414",
+                        "details": null
+                    }
+                ]
+            }
+        ]
+    }
+}

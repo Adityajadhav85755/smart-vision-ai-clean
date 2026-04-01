@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Vision AI - 3D Experience</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r169/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0014 0%, #1a0033 100%);
+        }
+        #wallpaper-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .welcome-text {
+            font-size: clamp(2rem, 6vw, 4rem);
+            text-align: center;
+            margin: 2rem 0;
+            opacity: 0;
+            color: white;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .welcome-text span {
+            background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stats-pill {
+            position: fixed;
+            top: 30px;
+            right: -100%;
+            background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+        }
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .stats-item i {
+            font-size: 1.2rem;
+        }
+        .stats-number {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #ffd700;
+        }
+        .grid {
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(100px) scale(0.9);
+        }
+        .glass-card:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.4);
+        }
+        .card-icon {
+            font-size: 3rem;
+            text-align: center;
+        }
+        .glass-card h2 {
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+            text-align: center;
+        }
+        .glass-card p {
+            font-size: 0.95rem;
+            text-align: center;
+            opacity: 0.9;
+            flex-grow: 1;
+        }
+        .card-arrow {
+            text-align: center;
+            font-size: 1.5rem;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .glass-card {
+                padding: 1.5rem;
+            }
+            .welcome-text {
+                font-size: 1.8rem;
+                margin: 1rem 0;
+            }
+            .stats-pill {
+                top: 15px;
+                right: -100%;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.85rem;
+                gap: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .grid {
+                grid-template-columns: 1fr;
+                padding: 0.5rem;
+                gap: 0.75rem;
+            }
+            .glass-card {
+                padding: 1rem;
+            }
+            .welcome-text {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Wallpaper Container -->
+    <div id="wallpaper-container"></div>
+    <!-- Stats Pill -->
+    <div class="stats-pill" id="statsPill">
+        <div class="stats-item">
+            <span>🔍 Scans:</span>
+            <span class="stats-number" id="scanCount">1,247</span>
+        </div>
+        <div class="stats-item">
+            <span>📊 Accuracy:</span>
+            <span class="stats-number" id="accuracy">97%</span>
+        </div>
+    </div>
+    <!-- Welcome Text -->
+    <div class="content">
+        <h1 class="welcome-text" id="welcomeText">Welcome to <span>Smart Vision AI</span> 🚀</h1>
+        <!-- 4 Glass Cards Grid -->
+        <div class="grid">
+            <a href="/dashboard" class="glass-card" data-card="profile">
+                <div class="card-icon">👤</div>
+                <h2>Dashboard</h2>
+                <p>Access your student panel with real-time analytics</p>
+                <div class="card-arrow">→</div>
+            </a>
+            <a href="/detection" class="glass-card" data-card="detection">
+                <div class="card-icon">📸</div>
+                <h2>Scan Materials</h2>
+                <p>Upload & classify materials with AI</p>
+                <div class="card-arrow">→</div>
+            </a>
+            <a href="/features" class="glass-card" data-card="features">
+                <div class="card-icon">⚡</div>
+                <h2>Features</h2>
+                <p>Explore our advanced AI capabilities</p>
+                <div class="card-arrow">→</div>
+            </a>
+            <a href="/about" class="glass-card" data-card="about">
+                <div class="card-icon">ℹ️</div>
+                <h2>About Us</h2>
+                <p>Learn about Smart Vision AI</p>
+                <div class="card-arrow">→</div>
+            </a>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        // 🌟 ANIMATION FLOW STARTS HERE
+        // 1. INIT USER DATA
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        // 2. THREE.JS WALLPAPER (t=0.1s)
+        class HomeWallpaper {
+            constructor() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                document.getElementById('wallpaper-container').appendChild(this.renderer.domElement);
+                this.mouse = {x:0, y:0};
+                this.time = 0;
+                this.init();
+                this.animate();
+            }
+            init() {
+                // AI Wallpaper Plane
+                const geo = new THREE.PlaneGeometry(15, 8);
+                this.mat = new THREE.MeshBasicMaterial({transparent:true, opacity:0});
+                this.plane = new THREE.Mesh(geo, this.mat);
+                this.scene.add(this.plane);
+                // Neural Particles
+                const particlesGeo = new THREE.BufferGeometry();
+                const count = 2000;
+                const pos = new Float32Array(count * 3);
+                for(let i=0; i<count*3; i++) pos[i] = (Math.random()-0.5)*10;
+                particlesGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+                this.particles = new THREE.Points(particlesGeo, new THREE.PointsMaterial({
+                    size: 0.01, color: 0x8B5CF6, transparent: true, opacity: 0
+                }));
+                this.scene.add(this.particles);
+                this.camera.position.z = 5;
+            }
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                this.time += 0.01;
+                // Continuous animations (∞ loop)
+                this.plane.rotation.x = this.mouse.y * 0.1;
+                this.plane.rotation.z = this.mouse.x * 0.1;
+                this.particles.rotation.y += 0.002;
+                this.mat.opacity = 0.6 + Math.sin(this.time)*0.1;
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+        // 3. START WALLPAPER (t=0.1s)
+        const wallpaper = new HomeWallpaper();
+        window.addEventListener('mousemove', (e) => {
+            wallpaper.mouse.x = (e.clientX/window.innerWidth)*2-1;
+            wallpaper.mouse.y = -(e.clientY/window.innerHeight)*2+1;
+        });
+        // 4. PAGE REVEAL SEQUENCE (t=1.0s → 2.0s)
+        setTimeout(() => {
+            // Welcome text typewriter
+            gsap.fromTo("#welcomeText",
+                {opacity: 0, scale: 0.8},
+                {opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)"}
+            );
+            // Cards stagger
+            gsap.from(".glass-card", {
+                y: 100, opacity: 0, scale: 0.9,
+                duration: 0.8, stagger: 0.2,
+                ease: "back.out(1.7)",
+                onComplete: () => {
+                    // Stats pill slide-in
+                    gsap.to("#statsPill", {right: "30px", duration: 1, ease: "power2.out"});
+                }
+            });
+            // Fade in wallpaper elements
+            gsap.to(wallpaper.mat, {opacity: 0.7, duration: 1.5});
+            gsap.to(wallpaper.particles.material, {opacity: 0.8, duration: 1.5});
+        }, 1000);
+        // 5. HOVER INTERACTIONS (Real-time)
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                gsap.to(card, {y: -10, scale: 1.02, duration: 0.3});
+            });
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {y: 0, scale: 1, duration: 0.3});
+            });
+        });
+        // 6. LIVE STATS COUNTER
+        setInterval(() => {
+            try {
+                const scanCountEl = document.getElementById('scanCount');
+                const accuracyEl = document.getElementById('accuracy');
+                if (scanCountEl) {
+                    const count = parseInt(scanCountEl.textContent.replace(/,/g, '')) + 1;
+                    scanCountEl.textContent = count.toLocaleString();
+                    if(count % 10 === 0 && accuracyEl) {
+                        accuracyEl.textContent = (93 + Math.floor(Math.random()*7)) + '%';
+                    }
+                }
+            } catch (e) {
+                // Silent error handling to prevent console spam
+            }
+        }, 10000);
+        // 7. RESPONSIVE HANDLER
+        window.addEventListener('resize', () => {
+            wallpaper.renderer.setSize(window.innerWidth, window.innerHeight);
+            wallpaper.camera.aspect = window.innerWidth / window.innerHeight;
+            wallpaper.camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>

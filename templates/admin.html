@@ -1,0 +1,2109 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Smart Vision AI</title>
+<!-- Favicon - Optimized for fast loading -->
+<link rel="preconnect" href="{{ url_for('static', filename='photos/images.png') }}">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='photos/images.png') }}" sizes="32x32">
+<link rel="shortcut icon" href="{{ url_for('static', filename='photos/images.png') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='photos/images.png') }}">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='photos/images.png') }}" sizes="192x192">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='photos/images.png') }}" sizes="512x512">
+<meta name="theme-color" content="#6366f1">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --primary:#6366f1;--primary-light:#818cf8;--primary-dark:#4f46e5;
+  --accent:#a855f7;--cyan:#06b6d4;--emerald:#10b981;
+  --amber:#f59e0b;--red:#ef4444;--rose:#f43f5e;
+  --primary-gradient:linear-gradient(135deg,#6366f1 0%,#a855f7 100%);
+  --cyan-gradient:linear-gradient(135deg,#06b6d4 0%,#10b981 100%);
+  --amber-gradient:linear-gradient(135deg,#f59e0b 0%,#f43f5e 100%);
+  --green-gradient:linear-gradient(135deg,#10b981 0%,#06b6d4 100%);
+  --font-display:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:12px;--radius-lg:18px;--radius-xl:24px;
+  --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"] {
+  --bg:#0a0f1e;--bg-1:#0f1629;--bg-2:#131d35;--bg-3:#1a2540;
+  --surface:rgba(255,255,255,0.04);--surface-hover:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12);
+  --text-1:#f1f5f9;--text-2:#94a3b8;--text-3:#4a5568;
+  --header-bg:rgba(10,15,30,0.85);--sidebar-bg:rgba(10,15,30,0.97);
+  --card-bg:rgba(255,255,255,0.04);--input-bg:rgba(255,255,255,0.06);
+  --modal-bg:#0f1629;
+}
+[data-theme="light"] {
+  --bg:#f0f4ff;--bg-1:#e8edfa;--bg-2:#ffffff;--bg-3:#f8faff;
+  --surface:rgba(99,102,241,0.04);--surface-hover:rgba(99,102,241,0.08);
+  --border:rgba(99,102,241,0.12);--border-strong:rgba(99,102,241,0.2);
+  --text-1:#1e1b4b;--text-2:#475569;--text-3:#94a3b8;
+  --header-bg:rgba(240,244,255,0.92);--sidebar-bg:#ffffff;
+  --card-bg:#ffffff;--input-bg:rgba(99,102,241,0.05);--modal-bg:#ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text-1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background 0.4s,color 0.4s}
+a{text-decoration:none;color:inherit}ul{list-style:none}
+button{font-family:var(--font-body);cursor:pointer}
+input,select,textarea{font-family:var(--font-body)}
+img{display:block;max-width:100%}
+::selection{background:rgba(99,102,241,0.25);color:var(--primary-light)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+.layout{display:flex;min-height:100vh}
+.main-wrap{flex:1;display:flex;flex-direction:column;min-width:0}
+/* SIDEBAR */
+.sidebar{width:260px;flex-shrink:0;background:var(--sidebar-bg);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;transition:var(--transition);z-index:200}
+.sidebar-header{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.sidebar-brand{display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:800;font-size:1.05rem;letter-spacing:-0.01em}
+.brand-logo{width:38px;height:38px;border-radius:10px;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;flex-shrink:0;box-shadow:0 4px 16px rgba(99,102,241,0.4)}
+.brand-name{background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sidebar-admin{display:flex;align-items:center;gap:10px;padding:14px 20px;margin:12px 12px 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:0.85rem}
+.admin-ava{width:34px;height:34px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.8rem;flex-shrink:0}
+.admin-meta{min-width:0}
+.admin-name{font-weight:600;font-size:0.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-role{font-size:0.72rem;color:var(--text-2)}
+.online-dot{width:8px;height:8px;background:var(--emerald);border-radius:50%;margin-left:auto;flex-shrink:0;box-shadow:0 0 6px var(--emerald)}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.nav-section-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-3);padding:8px 10px 4px;margin-top:8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:var(--radius);font-size:0.875rem;font-weight:500;color:var(--text-2);transition:var(--transition);cursor:pointer;position:relative;border:1px solid transparent}
+.nav-item:hover{color:var(--text-1);background:var(--surface-hover)}
+.nav-item.active{color:var(--primary-light);background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.2)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--primary);border-radius:0 2px 2px 0}
+.nav-item i{width:18px;text-align:center;font-size:0.95rem}
+.nav-badge{margin-left:auto;padding:2px 8px;border-radius:100px;font-size:0.65rem;font-weight:700}
+.nb-red{background:rgba(239,68,68,0.2);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+.nb-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.theme-toggle-btn{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);color:var(--text-2);font-size:0.85rem;font-weight:500;transition:var(--transition);width:100%}
+.theme-toggle-btn:hover{background:var(--surface-hover);color:var(--text-1)}
+.toggle-track{margin-left:auto;width:38px;height:20px;border-radius:100px;background:var(--border-strong);position:relative;transition:var(--transition);flex-shrink:0}
+[data-theme="light"] .toggle-track{background:var(--primary)}
+.toggle-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:var(--transition)}
+[data-theme="light"] .toggle-knob{left:20px}
+.logout-nav{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);color:var(--red);font-size:0.85rem;font-weight:600;transition:var(--transition);width:100%}
+.logout-nav:hover{background:rgba(239,68,68,0.15)}
+/* TOPBAR */
+.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:16px;background:var(--header-bg);border-bottom:1px solid var(--border);backdrop-filter:blur(24px);position:sticky;top:0;z-index:100;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:14px;min-width:0}
+.mob-menu-btn{display:none;background:none;border:none;color:var(--text-2);font-size:1.2rem;padding:4px}
+.page-title{font-family:var(--font-display);font-weight:700;font-size:1.15rem;letter-spacing:-0.01em}
+.page-breadcrumb{font-size:0.78rem;color:var(--text-2);display:flex;align-items:center;gap:6px}
+.page-breadcrumb span{color:var(--primary)}
+.topbar-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar-icon-btn{width:38px;height:38px;border-radius:10px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:0.9rem;transition:var(--transition);position:relative}
+.topbar-icon-btn:hover{background:var(--surface-hover);color:var(--text-1)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:2px solid var(--bg)}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius);padding:0 14px;height:38px;min-width:220px}
+.topbar-search input{background:none;border:none;outline:none;color:var(--text-1);font-size:0.85rem;width:100%}
+.topbar-search input::placeholder{color:var(--text-3)}
+.time-badge{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-2);background:var(--surface);border:1px solid var(--border);padding:6px 12px;border-radius:var(--radius);white-space:nowrap}
+/* CONTENT */
+.content{flex:1;padding:24px 28px;overflow-y:auto}
+.tab-pane{display:none}.tab-pane.active{display:block}
+/* UTILITY */
+.g-primary{background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.g-cyan{background:var(--cyan-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.g-amber{background:var(--amber-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+/* CARDS */
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;transition:var(--transition)}
+.card:hover{border-color:var(--border-strong)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-family:var(--font-display);font-weight:700;font-size:1rem;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px}
+.card-title-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.75rem}
+.cti-primary{background:rgba(99,102,241,0.15);color:var(--primary-light)}
+.cti-cyan{background:rgba(6,182,212,0.12);color:var(--cyan)}
+.cti-green{background:rgba(16,185,129,0.12);color:var(--emerald)}
+.cti-amber{background:rgba(245,158,11,0.12);color:var(--amber)}
+.cti-red{background:rgba(239,68,68,0.12);color:var(--red)}
+.cti-violet{background:rgba(168,85,247,0.12);color:var(--accent)}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:16px;margin-bottom:20px}
+.kpi-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;position:relative;overflow:hidden;transition:var(--transition)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-color,var(--primary-gradient))}
+.kpi-card:hover{transform:translateY(-3px);border-color:var(--border-strong);box-shadow:0 12px 32px rgba(0,0,0,0.2)}
+.kpi-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.kpi-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-2)}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.kpi-val{font-family:var(--font-display);font-size:2rem;font-weight:800;line-height:1;margin-bottom:6px}
+.kpi-sub{font-size:0.75rem;color:var(--text-2);display:flex;align-items:center;gap:4px}
+.kpi-up{color:var(--emerald)}.kpi-down{color:var(--red)}
+/* CMD GRID */
+.cmd-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.cmd-full{grid-column:1/-1}.cmd-2{grid-column:span 2}.cmd-1{grid-column:span 1}
+/* GLANCE */
+.glance-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px}
+.glance-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;transition:var(--transition)}
+.glance-card:hover{border-color:var(--border-strong);background:var(--surface-hover)}
+.glance-val{font-family:var(--font-display);font-size:1.6rem;font-weight:800;line-height:1;margin-bottom:4px}
+.glance-lbl{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-2)}
+.glance-dot{width:7px;height:7px;border-radius:50%;margin:6px auto 0}
+/* ALERT STRIP */
+.alert-strip{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.alert-pill{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:100px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:var(--transition);border:1px solid transparent}
+.alert-pill:hover{transform:translateY(-1px)}
+.ap-red{background:rgba(239,68,68,0.1);color:var(--red);border-color:rgba(239,68,68,0.2)}
+.ap-amber{background:rgba(245,158,11,0.1);color:var(--amber);border-color:rgba(245,158,11,0.2)}
+.ap-green{background:rgba(16,185,129,0.1);color:var(--emerald);border-color:rgba(16,185,129,0.2)}
+.ap-cyan{background:rgba(6,182,212,0.1);color:var(--cyan);border-color:rgba(6,182,212,0.2)}
+/* FEED */
+.feed-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);align-items:flex-start;transition:var(--transition)}
+.feed-item:last-child{border-bottom:none}
+.feed-item:hover{padding-left:4px}
+.feed-ava{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff}
+.feed-body{flex:1;min-width:0}
+.feed-title{font-size:0.85rem;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed-meta{font-size:0.75rem;color:var(--text-2)}
+.feed-time{font-size:0.72rem;color:var(--text-3);white-space:nowrap;font-family:var(--font-mono);flex-shrink:0}
+/* NEWS */
+.news-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--transition)}
+.news-item:last-child{border-bottom:none;padding-bottom:0}
+.news-item:hover .news-title{color:var(--primary-light)}
+.news-num{font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--border-strong);flex-shrink:0;line-height:1;width:28px}
+.news-body{flex:1;min-width:0}
+.news-title{font-size:0.85rem;font-weight:600;line-height:1.4;margin-bottom:4px;transition:color 0.2s}
+.news-source{font-size:0.72rem;color:var(--text-2);display:flex;align-items:center;gap:6px}
+.news-tag{padding:2px 8px;border-radius:100px;font-size:0.62rem;font-weight:700;background:rgba(99,102,241,0.12);color:var(--primary-light);letter-spacing:0.05em}
+/* AI */
+.ai-panel{display:flex;flex-direction:column;height:400px}
+.ai-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px 0;margin-bottom:12px}
+.ai-msg{display:flex;gap:10px;align-items:flex-start}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-bubble-icon{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.72rem}
+.ai-icon-ai{background:var(--primary-gradient);color:#fff}
+.ai-icon-user{background:var(--surface);color:var(--text-2);border:1px solid var(--border)}
+.ai-bubble{max-width:78%;padding:10px 13px;border-radius:12px;font-size:0.82rem;line-height:1.6}
+.ai-bubble-ai{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.18);color:var(--text-1);border-radius:4px 12px 12px 12px}
+.ai-bubble-user{background:var(--primary);color:#fff;border-radius:12px 4px 12px 12px}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:10px 13px}
+.ai-typing span{width:6px;height:6px;background:var(--primary);border-radius:50%;animation:typing-bounce 1.2s ease-in-out infinite}
+.ai-typing span:nth-child(2){animation-delay:0.2s}
+.ai-typing span:nth-child(3){animation-delay:0.4s}
+@keyframes typing-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.ai-input-row{display:flex;gap:8px}
+.ai-input{flex:1;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text-1);font-size:0.83rem;outline:none;transition:border-color 0.2s}
+.ai-input:focus{border-color:rgba(99,102,241,0.4)}
+.ai-input::placeholder{color:var(--text-3)}
+.ai-send{background:var(--primary-gradient);border:none;border-radius:var(--radius);width:42px;height:42px;color:#fff;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0}
+.ai-send:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(99,102,241,0.4)}
+.ai-quick-prompts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.ai-qp{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:var(--surface);color:var(--text-2);font-size:0.72rem;font-weight:500;cursor:pointer;transition:var(--transition)}
+.ai-qp:hover{border-color:rgba(99,102,241,0.3);color:var(--primary-light)}
+.ai-status{display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--emerald);margin-bottom:8px}
+.ai-status-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald);animation:blink-dot 2s infinite}
+/* HEALTH */
+.health-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+.health-row:last-child{border-bottom:none}
+.health-label{font-size:0.85rem;font-weight:500;display:flex;align-items:center;gap:8px}
+.health-status{display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:700}
+.hs-ok{color:var(--emerald)}.hs-warn{color:var(--amber)}.hs-err{color:var(--red)}
+.health-bar-track{width:100px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.health-bar-fill{height:100%;border-radius:2px;transition:width 1.5s ease}
+.hb-green{background:var(--green-gradient)}
+.hb-amber{background:var(--amber-gradient)}
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.qa-btn{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 12px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border);color:var(--text-2);font-size:0.78rem;font-weight:600;text-align:center;transition:var(--transition)}
+.qa-btn:hover{background:var(--surface-hover);color:var(--text-1);border-color:var(--border-strong);transform:translateY(-2px)}
+.qa-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surface);border-bottom:1px solid var(--border)}
+th{padding:13px 16px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-2);text-align:left;white-space:nowrap}
+td{padding:13px 16px;font-size:0.85rem;border-bottom:1px solid var(--border);color:var(--text-1);background:var(--card-bg)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--surface-hover)}
+.cell-user{display:flex;align-items:center;gap:10px}
+.cell-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.75rem;flex-shrink:0}
+.cell-avatar img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.cell-name{font-weight:600;font-size:0.85rem}
+.cell-sub{font-size:0.72rem;color:var(--text-2)}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:100px;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border:1px solid transparent}
+.b-green{background:rgba(16,185,129,0.12);color:var(--emerald);border-color:rgba(16,185,129,0.2)}
+.b-amber{background:rgba(245,158,11,0.12);color:var(--amber);border-color:rgba(245,158,11,0.2)}
+.b-red{background:rgba(239,68,68,0.12);color:var(--red);border-color:rgba(239,68,68,0.2)}
+.b-blue{background:rgba(99,102,241,0.12);color:var(--primary-light);border-color:rgba(99,102,241,0.2)}
+.b-cyan{background:rgba(6,182,212,0.1);color:var(--cyan);border-color:rgba(6,182,212,0.2)}
+.b-gray{background:var(--surface);color:var(--text-2);border-color:var(--border)}
+/* ACTION BUTTONS */
+.act-btns{display:flex;gap:6px;align-items:center}
+.act-btn{width:30px;height:30px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--text-2);transition:var(--transition)}
+.act-btn:hover{background:var(--surface-hover);color:var(--text-1)}
+.act-btn.green:hover{background:rgba(16,185,129,0.12);color:var(--emerald);border-color:rgba(16,185,129,0.2)}
+.act-btn.red:hover{background:rgba(239,68,68,0.1);color:var(--red);border-color:rgba(239,68,68,0.2)}
+.act-btn.blue:hover{background:rgba(99,102,241,0.1);color:var(--primary-light);border-color:rgba(99,102,241,0.2)}
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:0.8rem;font-weight:600;color:var(--text-2)}
+.form-control{background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px 13px;color:var(--text-1);font-size:0.875rem;outline:none;transition:border-color 0.2s;font-family:var(--font-body)}
+.form-control:focus{border-color:rgba(99,102,241,0.4);background:var(--surface-hover)}
+.form-control::placeholder{color:var(--text-3)}
+.form-control:disabled{opacity:0.5;cursor:not-allowed}
+select.form-control option{background:var(--bg-1);color:var(--text-1)}
+textarea.form-control{resize:vertical;min-height:90px}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius);padding:0 14px;height:40px}
+.search-box input{background:none;border:none;outline:none;color:var(--text-1);font-size:0.875rem;flex:1}
+.search-box input::placeholder{color:var(--text-3)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius);font-size:0.85rem;font-weight:600;border:none;transition:var(--transition);cursor:pointer;font-family:var(--font-body);white-space:nowrap}
+.btn-sm{padding:7px 14px;font-size:0.78rem}
+.btn-primary{background:var(--primary-gradient);color:#fff;box-shadow:0 4px 14px rgba(99,102,241,0.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(99,102,241,0.45)}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text-2)}
+.btn-secondary:hover{background:var(--surface-hover);color:var(--text-1)}
+.btn-danger{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:var(--red)}
+.btn-danger:hover{background:rgba(239,68,68,0.2)}
+.btn-green{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:var(--emerald)}
+.btn-green:hover{background:rgba(16,185,129,0.2)}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+/* SETTINGS */
+.settings-section{margin-bottom:24px}
+.settings-section h3{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-label h4{font-size:0.9rem;font-weight:600;margin-bottom:3px}
+.setting-label p{font-size:0.78rem;color:var(--text-2)}
+.toggle{position:relative;width:44px;height:24px;background:var(--border-strong);border-radius:12px;border:none;cursor:pointer;transition:var(--transition);flex-shrink:0}
+.toggle.on{background:var(--primary)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:var(--transition)}
+.toggle.on::after{left:22px}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--modal-bg);border:1px solid var(--border);border-radius:var(--radius-xl);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:modal-in 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border)}
+.modal-header h3{font-family:var(--font-display);font-weight:700;font-size:1.05rem}
+.modal-close-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--text-2);font-size:0.85rem;transition:var(--transition)}
+.modal-close-btn:hover{background:var(--surface-hover);color:var(--text-1)}
+.modal-body{padding:24px}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--border)}
+/* CHARTS */
+.chart-box{height:260px;position:relative}
+.chart-box-sm{height:200px;position:relative}
+.chart-box-lg{height:320px;position:relative}
+/* SUB TABS */
+.sub-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.sub-tab{padding:8px 16px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);color:var(--text-2);font-size:0.82rem;font-weight:600;transition:var(--transition)}
+.sub-tab:hover{background:var(--surface-hover);color:var(--text-1)}
+.sub-tab.active{background:var(--primary-gradient);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(99,102,241,0.3)}
+/* NOTIF DROPDOWN */
+.notif-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:360px;background:var(--modal-bg);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:0 16px 48px rgba(0,0,0,0.3);z-index:500;overflow:hidden;display:none;max-height:480px;overflow-y:auto}
+.notif-dropdown.open{display:block}
+.notif-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--modal-bg);z-index:1}
+.notif-head span{font-family:var(--font-display);font-weight:700;font-size:0.9rem}
+.notif-item{display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--transition)}
+.notif-item:hover{background:var(--surface-hover)}
+.notif-item.read{opacity:0.5}
+.notif-item:last-child{border-bottom:none}
+.notif-icon{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.78rem}
+.notif-text{flex:1;min-width:0}
+.notif-title{font-size:0.82rem;font-weight:600;margin-bottom:2px}
+.notif-time{font-size:0.72rem;color:var(--text-3);font-family:var(--font-mono)}
+/* SPINNER */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* LEADERBOARD */
+.lb-rank{font-family:var(--font-display);font-size:1.1rem;font-weight:800;width:32px;text-align:center;flex-shrink:0}
+.lb-1{color:#f59e0b}.lb-2{color:#94a3b8}.lb-3{color:#b45309}
+/* PROGRESS */
+.prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width 1.5s ease}
+.hb-green{background:var(--green-gradient)}.hb-amber{background:var(--amber-gradient)}
+/* VIDEO */
+.video-card{border-radius:var(--radius);overflow:hidden;position:relative;cursor:pointer;background:var(--surface);border:1px solid var(--border);transition:var(--transition)}
+.video-card:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+.video-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;filter:brightness(0.6)}
+.video-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.video-play-ico{width:48px;height:48px;border-radius:50%;background:rgba(99,102,241,0.9);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;transition:var(--transition)}
+.video-card:hover .video-play-ico{transform:scale(1.1);background:var(--primary)}
+.video-title{font-size:0.8rem;font-weight:600;color:#fff;text-align:center;padding:0 12px}
+.video-duration{font-family:var(--font-mono);font-size:0.68rem;color:rgba(255,255,255,0.6)}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+/* MISC */
+.divider{height:1px;background:var(--border);margin:16px 0}
+.text-muted{color:var(--text-2)}.text-sm{font-size:0.78rem}.font-mono{font-family:var(--font-mono)}
+.mb-4{margin-bottom:4px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}
+.gap-8{gap:8px}.flex{display:flex}.flex-center{display:flex;align-items:center}.justify-between{justify-content:space-between}.flex-wrap{flex-wrap:wrap}.w-full{width:100%}
+.section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-2);margin-bottom:10px;display:block}
+/* ALERT ITEM */
+.alert-item{display:flex;gap:12px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-bg);margin-bottom:10px;transition:var(--transition)}
+.alert-item.read{opacity:0.5}
+.alert-item:hover{border-color:var(--border-strong)}
+/* EDIT INLINE */
+.editable-cell input{background:var(--input-bg);border:1px solid rgba(99,102,241,0.4);border-radius:6px;padding:4px 8px;color:var(--text-1);font-size:0.85rem;width:100%;outline:none}
+/* SCAN PHOTO */
+.scan-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--border)}
+/* REPORTS EXPORT */
+.report-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;text-align:center;transition:var(--transition);cursor:pointer}
+.report-card:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,0.15)}
+.report-card-icon{font-size:2rem;margin-bottom:10px}
+.report-card h4{font-family:var(--font-display);font-weight:700;font-size:0.95rem;margin-bottom:4px}
+.report-card p{font-size:0.75rem;color:var(--text-2)}
+/* UPLOAD DROP */
+.drop-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:40px;text-align:center;cursor:pointer;transition:var(--transition)}
+.drop-zone:hover,.drop-zone.drag-over{border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.04)}
+/* NOTIFICATION BADGE ON NAV */
+.notif-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:8px;background:var(--red);color:#fff;font-size:0.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px}
+/* INSIGHT REPORTS */
+.insight-report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:16px}
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .sidebar{display:none}
+  .sidebar.mob-open{display:flex;position:fixed;left:0;top:0;bottom:0;z-index:1000}
+  .mob-menu-btn{display:flex}
+  .glance-strip{grid-template-columns:repeat(3,1fr)}
+  .cmd-grid{grid-template-columns:1fr 1fr}
+  .cmd-2{grid-column:span 2}
+}
+@media(max-width:768px){
+  .content{padding:16px}
+  .topbar{padding:0 16px}
+  .topbar-search{display:none}
+  .time-badge{display:none}
+  .glance-strip{grid-template-columns:repeat(2,1fr)}
+  .cmd-grid{grid-template-columns:1fr}
+  .cmd-2,.cmd-1{grid-column:span 1}
+  .form-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .glance-strip{grid-template-columns:1fr 1fr}
+  .kpi-grid{grid-template-columns:1fr}
+}
+@keyframes blink-dot{0%,100%{opacity:1;box-shadow:0 0 6px var(--emerald)}50%{opacity:0.4;box-shadow:none}}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+</style>
+</head>
+<body>
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">
+      <div class="brand-logo"><i class="fas fa-brain"></i></div>
+      <span class="brand-name">Smart Vision AI</span>
+    </div>
+  </div>
+  <div class="sidebar-admin">
+    <div class="admin-ava">AD</div>
+    <div class="admin-meta">
+      <div class="admin-name">Administrator</div>
+      <div class="admin-role">Super Admin</div>
+    </div>
+    <div class="online-dot"></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="nav-section-label">Operations</span>
+    <div class="nav-item active" onclick="switchTab('overview',this)"><i class="fas fa-gauge-high"></i> Command Center</div>
+    <div class="nav-item" onclick="switchTab('students',this)"><i class="fas fa-users"></i> Students <span class="nav-badge nb-amber" id="studBadge">3</span></div>
+    <div class="nav-item" onclick="switchTab('detection',this)"><i class="fas fa-radar"></i> Detection</div>
+    <div class="nav-item" onclick="switchTab('alerts',this)"><i class="fas fa-bell"></i> Live Alerts <span class="nav-badge nb-red" id="alertBadge">7</span></div>
+    <div class="nav-item" onclick="switchTab('ai',this)"><i class="fas fa-robot"></i> AI Assistant</div>
+    <span class="nav-section-label">Intelligence</span>
+    <div class="nav-item" onclick="switchTab('analytics',this)"><i class="fas fa-chart-line"></i> Analytics</div>
+    <div class="nav-item" onclick="switchTab('insights',this)"><i class="fas fa-chart-bar"></i> Insights</div>
+    <div class="nav-item" onclick="switchTab('news',this)"><i class="fas fa-newspaper"></i> News & Trends</div>
+    <span class="nav-section-label">System</span>
+    <div class="nav-item" onclick="switchTab('model',this)"><i class="fas fa-brain"></i> AI Model</div>
+    <div class="nav-item" onclick="switchTab('reports',this)"><i class="fas fa-file-pdf"></i> Reports</div>
+    <div class="nav-item" onclick="switchTab('audit',this)"><i class="fas fa-scroll"></i> Audit Log</div>
+    <div class="nav-item" onclick="switchTab('errors',this)"><i class="fas fa-exclamation-circle"></i> Errors <span class="nav-badge nb-red">3</span></div>
+    <div class="nav-item" onclick="switchTab('settings',this)"><i class="fas fa-cog"></i> Settings</div>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i>
+      <span id="themeLabel">Dark Mode</span>
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+    </button>
+    <button class="logout-nav" onclick="openModal('logoutModal')">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-wrap">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mob-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div>
+        <div class="page-title" id="pageTitle">Command Center</div>
+        <div class="page-breadcrumb">Admin / <span id="pageCrumb">Overview</span></div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Global search…" id="globalSearch" oninput="globalSearchFn(this.value)">
+      </div>
+      <div class="time-badge" id="liveClock">—</div>
+      <div style="position:relative">
+        <button class="topbar-icon-btn" onclick="toggleNotifDropdown()" id="notifBtn">
+          <i class="fas fa-bell"></i>
+          <div class="notif-dot" id="notifDot"></div>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+          <div class="notif-head">
+            <span>Notifications <span id="notifCount" class="badge b-red" style="margin-left:6px">7</span></span>
+            <button class="btn btn-sm btn-secondary" onclick="markAllNotifsRead()">Mark All Read</button>
+          </div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- OVERVIEW -->
+    <div class="tab-pane active" id="tab-overview">
+      <span class="section-label">Today at a Glance</span>
+      <div class="glance-strip">
+        <div class="glance-card"><div class="glance-val" style="background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">12</div><div class="glance-lbl">New Signups</div><div class="glance-dot" style="background:var(--primary)"></div></div>
+        <div class="glance-card"><div class="glance-val" style="background:var(--cyan-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">847</div><div class="glance-lbl">Scans Today</div><div class="glance-dot" style="background:var(--cyan)"></div></div>
+        <div class="glance-card"><div class="glance-val" style="background:var(--amber-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="overviewPending">3</div><div class="glance-lbl">Pending Approvals</div><div class="glance-dot" style="background:var(--amber)"></div></div>
+        <div class="glance-card"><div class="glance-val" style="background:linear-gradient(135deg,#ef4444,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">2</div><div class="glance-lbl">Failed Uploads</div><div class="glance-dot" style="background:var(--red)"></div></div>
+        <div class="glance-card"><div class="glance-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">34</div><div class="glance-lbl">Active Sessions</div><div class="glance-dot" style="background:var(--emerald);animation:blink-dot 2s infinite"></div></div>
+        <div class="glance-card"><div class="glance-val" style="background:linear-gradient(135deg,#a855f7,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="overviewAlerts">7</div><div class="glance-lbl">Unread Alerts</div><div class="glance-dot" style="background:var(--accent)"></div></div>
+      </div>
+      <div class="alert-strip">
+        <div class="alert-pill ap-red"><i class="fas fa-circle" style="font-size:0.5rem"></i> 2 Low-confidence detections require review</div>
+        <div class="alert-pill ap-amber"><i class="fas fa-circle" style="font-size:0.5rem"></i> Model retrain recommended (7 days old)</div>
+        <div class="alert-pill ap-green"><i class="fas fa-circle" style="font-size:0.5rem"></i> All APIs operational</div>
+        <div class="alert-pill ap-cyan"><i class="fas fa-circle" style="font-size:0.5rem"></i> 342 new materials imported</div>
+      </div>
+      <div class="kpi-grid mb-20">
+        <div class="kpi-card" style="--kpi-color:var(--primary-gradient)"><div class="kpi-top"><div class="kpi-label">Total Students</div><div class="kpi-icon" style="background:rgba(99,102,241,0.12);color:var(--primary-light)"><i class="fas fa-users"></i></div></div><div class="kpi-val g-primary" id="totalStudentsKPI">486</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+24 this month</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--cyan-gradient)"><div class="kpi-top"><div class="kpi-label">Total Scans</div><div class="kpi-icon" style="background:rgba(6,182,212,0.1);color:var(--cyan)"><i class="fas fa-radar"></i></div></div><div class="kpi-val g-cyan">5,293</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+15% this month</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--green-gradient)"><div class="kpi-top"><div class="kpi-label">Usable Materials</div><div class="kpi-icon" style="background:rgba(16,185,129,0.1);color:var(--emerald)"><i class="fas fa-check-circle"></i></div></div><div class="kpi-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">1,842</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>64.7% of total</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--amber-gradient)"><div class="kpi-top"><div class="kpi-label">Model Accuracy</div><div class="kpi-icon" style="background:rgba(245,158,11,0.1);color:var(--amber)"><i class="fas fa-bullseye"></i></div></div><div class="kpi-val g-amber">94.5%</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+2.3% improvement</div></div>
+      </div>
+      <div class="cmd-grid">
+        <div class="card cmd-2">
+          <div class="card-header">
+            <div class="card-title"><div class="card-title-icon cti-cyan"><i class="fas fa-chart-line"></i></div>Scan Activity Trends</div>
+            <div class="flex gap-8">
+              <button class="btn btn-sm btn-secondary" onclick="updateChartRange('week',this)">7D</button>
+              <button class="btn btn-sm btn-secondary" onclick="updateChartRange('month',this)">30D</button>
+              <button class="btn btn-sm btn-primary" onclick="updateChartRange('year',this)">1Y</button>
+            </div>
+          </div>
+          <div class="chart-box"><canvas id="scanTrendsChart"></canvas></div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-green"><i class="fas fa-chart-pie"></i></div>Material Split</div></div>
+          <div class="chart-box-sm"><canvas id="donutChart"></canvas></div>
+          <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:0.78rem;font-weight:600">
+            <span style="color:var(--emerald)">● Usable 64.7%</span>
+            <span style="color:var(--red)">● Non-usable 35.3%</span>
+          </div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-primary"><i class="fas fa-bolt"></i></div>Priority Feed</div><span class="badge b-amber" style="animation:blink-dot 2s infinite">Live</span></div>
+          <div id="activityFeed">
+            <div class="feed-item"><div class="feed-ava" style="background:rgba(239,68,68,0.15);color:var(--red)"><i class="fas fa-user-clock"></i></div><div class="feed-body"><div class="feed-title">New student pending — ananya@nit.edu</div><div class="feed-meta">Registration approval required</div></div><div class="feed-time">2m</div></div>
+            <div class="feed-item"><div class="feed-ava" style="background:rgba(245,158,11,0.12);color:var(--amber)"><i class="fas fa-exclamation"></i></div><div class="feed-body"><div class="feed-title">Low confidence: Plastic Sheet — 62%</div><div class="feed-meta">Below 70% threshold → manual review</div></div><div class="feed-time">14m</div></div>
+            <div class="feed-item"><div class="feed-ava" style="background:rgba(16,185,129,0.1);color:var(--emerald)"><i class="fas fa-sync"></i></div><div class="feed-body"><div class="feed-title">Model v2.2.0 retrained successfully</div><div class="feed-meta">Accuracy improved 93.1% → 94.5%</div></div><div class="feed-time">1h</div></div>
+            <div class="feed-item"><div class="feed-ava" style="background:rgba(99,102,241,0.1);color:var(--primary-light)"><i class="fas fa-upload"></i></div><div class="feed-body"><div class="feed-title">Bulk import: 342 materials added</div><div class="feed-meta">WasteTech Global dataset imported</div></div><div class="feed-time">3h</div></div>
+          </div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-violet"><i class="fas fa-zap"></i></div>Quick Actions</div></div>
+          <div class="qa-grid">
+            <div class="qa-btn" onclick="switchTab('students',null,'approval')"><div class="qa-icon" style="background:rgba(245,158,11,0.12);color:var(--amber)"><i class="fas fa-user-check"></i></div>Approve Students</div>
+            <div class="qa-btn" onclick="switchTab('reports')"><div class="qa-icon" style="background:rgba(99,102,241,0.12);color:var(--primary-light)"><i class="fas fa-file-pdf"></i></div>Export Report</div>
+            <div class="qa-btn" onclick="retrainModel()"><div class="qa-icon" style="background:rgba(16,185,129,0.1);color:var(--emerald)"><i class="fas fa-sync"></i></div>Retrain Model</div>
+            <div class="qa-btn" onclick="switchTab('alerts')"><div class="qa-icon" style="background:rgba(239,68,68,0.1);color:var(--red)"><i class="fas fa-bell"></i></div>View Alerts</div>
+            <div class="qa-btn" onclick="switchTab('ai')"><div class="qa-icon" style="background:rgba(168,85,247,0.12);color:var(--accent)"><i class="fas fa-robot"></i></div>AI Copilot</div>
+            <div class="qa-btn" onclick="switchTab('detection')"><div class="qa-icon" style="background:rgba(6,182,212,0.1);color:var(--cyan)"><i class="fas fa-plus"></i></div>Add Material</div>
+          </div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-green"><i class="fas fa-server"></i></div>System Health</div><span class="badge b-green">All OK</span></div>
+          <div class="health-row"><span class="health-label"><i class="fas fa-circle" style="color:var(--emerald);font-size:0.5rem"></i> API Status</span><div class="health-status hs-ok"><i class="fas fa-check"></i> Operational</div></div>
+          <div class="health-row"><span class="health-label"><i class="fas fa-circle" style="color:var(--emerald);font-size:0.5rem"></i> Database</span><div class="health-status hs-ok"><i class="fas fa-check"></i> Connected</div></div>
+          <div class="health-row"><span class="health-label"><i class="fas fa-circle" style="color:var(--amber);font-size:0.5rem"></i> Storage</span><div style="display:flex;align-items:center;gap:8px"><div class="health-bar-track"><div class="health-bar-fill hb-amber" style="width:72%"></div></div><span class="text-sm" style="color:var(--amber)">72%</span></div></div>
+          <div class="health-row"><span class="health-label"><i class="fas fa-circle" style="color:var(--emerald);font-size:0.5rem"></i> Model Server</span><div class="health-status hs-ok"><i class="fas fa-check"></i> 1.2s avg</div></div>
+          <div class="health-row"><span class="health-label"><i class="fas fa-circle" style="color:var(--red);font-size:0.5rem"></i> Error Rate</span><div class="health-status hs-err">0.3%</div></div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-amber"><i class="fas fa-newspaper"></i></div>Smart Vision AI News</div><button class="btn btn-sm btn-secondary" onclick="switchTab('news')">View All</button></div>
+          <div class="news-item"><div class="news-num">1</div><div class="news-body"><div class="news-title">Smart Vision AI achieves 94.5% accuracy in material detection</div><div class="news-source"><span class="news-tag">Smart Vision</span>Internal · 2h ago</div></div></div>
+          <div class="news-item"><div class="news-num">2</div><div class="news-body"><div class="news-title">YOLOv8 integration improves real-time classification by 23%</div><div class="news-source"><span class="news-tag">AI Model</span>Research Team · 5h ago</div></div></div>
+          <div class="news-item"><div class="news-num">3</div><div class="news-body"><div class="news-title">New material database adds 342 recycling categories</div><div class="news-source"><span class="news-tag">Database</span>Data Team · 8h ago</div></div></div>
+        </div>
+        <div class="card cmd-2">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-red"><i class="fab fa-youtube"></i></div>Demo Videos</div></div>
+          <div class="video-grid">
+            <div class="video-card" onclick="openVideoModal('dZfCsYkqGPs')"><img class="video-thumb" src="https://img.youtube.com/vi/dZfCsYkqGPs/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision1/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Smart Vision AI - Material Detection</div><div class="video-duration">12:45</div></div></div>
+            <div class="video-card" onclick="openVideoModal('WgPbbWmnXJ8')"><img class="video-thumb" src="https://img.youtube.com/vi/WgPbbWmnXJ8/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision2/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">YOLO for Material Classification</div><div class="video-duration">8:30</div></div></div>
+            <div class="video-card" onclick="openVideoModal('tFNJGim3FXw')"><img class="video-thumb" src="https://img.youtube.com/vi/tFNJGim3FXw/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision3/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">AI-Powered Recycling Systems</div><div class="video-duration">10:15</div></div></div>
+            <div class="video-card" onclick="openVideoModal('ySL_4Gg5d0I')"><img class="video-thumb" src="https://img.youtube.com/vi/ySL_4Gg5d0I/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision4/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Smart Vision AI Tutorial</div><div class="video-duration">15:20</div></div></div>
+            <div class="video-card" onclick="openVideoModal('ag3DLKsl2vk')"><img class="video-thumb" src="https://img.youtube.com/vi/ag3DLKsl2vk/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision5/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Smart Waste Sorting Technology</div><div class="video-duration">11:30</div></div></div>
+            <div class="video-card" onclick="openVideoModal('T0tKGDeukx8')"><img class="video-thumb" src="https://img.youtube.com/vi/T0tKGDeukx8/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision6/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Sustainability with AI Vision</div><div class="video-duration">9:45</div></div></div>
+            <div class="video-card" onclick="openVideoModal('0NNggS8Y3C0')"><img class="video-thumb" src="https://img.youtube.com/vi/0NNggS8Y3C0/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision7/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Computer Vision for Recycling</div><div class="video-duration">13:20</div></div></div>
+            <div class="video-card" onclick="openVideoModal('iYSA_VPn_6I')"><img class="video-thumb" src="https://img.youtube.com/vi/iYSA_VPn_6I/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision8/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Deep Learning for Material Sort</div><div class="video-duration">7:15</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENTS -->
+    <div class="tab-pane" id="tab-students">
+      <div class="sub-tabs">
+        <button class="sub-tab active" onclick="switchSubTab('sData',this)"><i class="fas fa-table"></i> Student Data</button>
+        <button class="sub-tab" onclick="switchSubTab('sActivity',this)"><i class="fas fa-history"></i> Activity Logs</button>
+        <button class="sub-tab" onclick="switchSubTab('sApproval',this)"><i class="fas fa-check-circle"></i> Approvals <span class="badge b-red" style="margin-left:4px" id="approvalBadge">3</span></button>
+      </div>
+
+      <!-- STUDENT DATA -->
+      <div id="sData" class="sub-pane">
+        <div class="filter-row">
+          <div class="search-box" style="min-width:240px"><i class="fas fa-search"></i><input type="text" id="studentSearch" placeholder="Search students…" oninput="filterStudents()"></div>
+          <select class="form-control" style="width:auto" id="studentStatusFilter" onchange="filterStudents()"><option value="">All Status</option><option value="approved">Approved</option><option value="pending">Pending</option><option value="rejected">Rejected</option></select>
+          <button class="btn btn-primary" onclick="openModal('addStudentModal')"><i class="fas fa-plus"></i> Add Student</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>Status</th><th>Joined</th><th>Scans</th><th>Last Active</th><th>Actions</th></tr></thead>
+            <tbody id="studentTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ACTIVITY LOGS -->
+      <div id="sActivity" class="sub-pane" style="display:none">
+        <div class="kpi-grid mb-16" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi-card"><div class="kpi-top"><div class="kpi-label">Total Sessions</div></div><div class="kpi-val g-primary" id="totalSessions">—</div></div>
+          <div class="kpi-card"><div class="kpi-top"><div class="kpi-label">Active Now</div></div><div class="kpi-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="activeSessions">—</div></div>
+          <div class="kpi-card"><div class="kpi-top"><div class="kpi-label">Avg Duration</div></div><div class="kpi-val g-cyan" id="avgDuration">—</div></div>
+        </div>
+        <div class="card mb-16">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-primary"><i class="fas fa-clock"></i></div>Session Log</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Student</th><th>Login</th><th>Logout</th><th>Duration</th><th>Actions</th></tr></thead><tbody id="sessionTableBody"></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-cyan"><i class="fas fa-camera"></i></div>Scan History</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Image</th><th>Student</th><th>Scan Type</th><th>Material</th><th>Date</th><th>Result</th></tr></thead><tbody id="scanHistoryBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- APPROVALS -->
+      <div id="sApproval" class="sub-pane" style="display:none">
+        <div class="card mb-16">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-amber"><i class="fas fa-user-clock"></i></div>Pending Registrations</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Student</th><th>Email</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pendingTableBody"></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-primary"><i class="fas fa-cube"></i></div>Material Approvals</div></div>
+          <div class="table-wrap"><table><thead><tr><th>Student</th><th>Material</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead><tbody id="materialApprovalBody"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETECTION -->
+    <div class="tab-pane" id="tab-detection">
+      <div class="filter-row">
+        <div class="search-box" style="min-width:240px"><i class="fas fa-search"></i><input type="text" id="detectSearch" placeholder="Search detections…" oninput="filterDetections()"></div>
+        <select class="form-control" style="width:auto" id="detectStatusFilter" onchange="filterDetections()"><option value="">All Status</option><option value="usable">Usable</option><option value="non-usable">Non-Usable</option><option value="review">Review</option></select>
+        <button class="btn btn-primary" onclick="openModal('addMaterialModal')"><i class="fas fa-plus"></i> Add Material</button>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Image</th><th>Material</th><th>Type</th><th>Status</th><th>Confidence</th><th>Date Added</th><th>Submitted By</th><th>Actions</th></tr></thead><tbody id="detectionTableBody"></tbody></table></div>
+    </div>
+
+    <!-- ALERTS -->
+    <div class="tab-pane" id="tab-alerts">
+      <div class="kpi-grid mb-20" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card" style="--kpi-color:linear-gradient(135deg,#ef4444,#f43f5e)"><div class="kpi-top"><div class="kpi-label">Critical</div><div class="kpi-icon" style="background:rgba(239,68,68,0.1);color:var(--red)"><i class="fas fa-exclamation-circle"></i></div></div><div class="kpi-val" style="color:var(--red)" id="criticalCount">2</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--amber-gradient)"><div class="kpi-top"><div class="kpi-label">Warnings</div><div class="kpi-icon" style="background:rgba(245,158,11,0.1);color:var(--amber)"><i class="fas fa-exclamation-triangle"></i></div></div><div class="kpi-val g-amber" id="warningCount">5</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--primary-gradient)"><div class="kpi-top"><div class="kpi-label">Informational</div><div class="kpi-icon cti-primary"><i class="fas fa-info-circle"></i></div></div><div class="kpi-val g-primary">12</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--green-gradient)"><div class="kpi-top"><div class="kpi-label">Resolved</div><div class="kpi-icon cti-green"><i class="fas fa-check-circle"></i></div></div><div class="kpi-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="resolvedCount">34</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title"><div class="card-title-icon cti-red"><i class="fas fa-bell"></i></div>Active Alerts</div>
+        <div class="flex gap-8">
+          <button class="btn btn-sm btn-secondary" onclick="markAllAlertsRead()"><i class="fas fa-check-double"></i> Mark All Read</button>
+        </div>
+        </div>
+        <div id="alertsList"></div>
+      </div>
+    </div>
+
+    <!-- AI ASSISTANT -->
+    <div class="tab-pane" id="tab-ai">
+      <div class="cmd-grid">
+        <div class="card cmd-2">
+          <div class="card-header">
+            <div class="card-title"><div class="card-title-icon cti-violet"><i class="fas fa-robot"></i></div>Grok AI Admin Copilot</div>
+            <div class="flex gap-8 flex-center">
+              <div class="ai-status"><div class="ai-status-dot"></div>Grok-3 Live</div>
+              <span class="badge b-blue">xAI Grok</span>
+            </div>
+          </div>
+          <div class="ai-quick-prompts">
+            <div class="ai-qp" onclick="sendAIPromptQP(this)">Summarize today's alerts</div>
+            <div class="ai-qp" onclick="sendAIPromptQP(this)">Explain low model accuracy</div>
+            <div class="ai-qp" onclick="sendAIPromptQP(this)">Draft a weekly report</div>
+            <div class="ai-qp" onclick="sendAIPromptQP(this)">Top performing students</div>
+            <div class="ai-qp" onclick="sendAIPromptQP(this)">Storage optimization tips</div>
+            <div class="ai-qp" onclick="sendAIPromptQP(this)">Material sustainability insights</div>
+          </div>
+          <div class="ai-panel">
+            <div class="ai-messages" id="aiMessages">
+              <div class="ai-msg">
+                <div class="ai-bubble-icon ai-icon-ai"><i class="fas fa-robot"></i></div>
+                <div class="ai-bubble ai-bubble-ai">Hello! I'm your <strong>Grok-3 powered</strong> admin copilot. I can help you summarize alerts, explain model metrics, draft reports, analyze student performance, and provide sustainability insights. What would you like to know?</div>
+              </div>
+            </div>
+            <div class="ai-input-row">
+              <input class="ai-input" id="aiInput" type="text" placeholder="Ask me anything about your platform…" onkeydown="if(event.key==='Enter')sendAIMessage()">
+              <button class="ai-send" onclick="sendAIMessage()" id="aiSendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-cyan"><i class="fas fa-lightbulb"></i></div>AI Insights</div></div>
+          <div class="feed-item"><div class="feed-ava" style="background:rgba(99,102,241,0.1);color:var(--primary-light)"><i class="fas fa-chart-line"></i></div><div class="feed-body"><div class="feed-title">Model accuracy trending up</div><div class="feed-meta">+1.4% after last retrain. Schedule retrains weekly.</div></div></div>
+          <div class="feed-item"><div class="feed-ava" style="background:rgba(245,158,11,0.1);color:var(--amber)"><i class="fas fa-users"></i></div><div class="feed-body"><div class="feed-title">Student engagement at 78%</div><div class="feed-meta">Thursday sees peak. Low weekends — nudge emails help.</div></div></div>
+          <div class="feed-item"><div class="feed-ava" style="background:rgba(16,185,129,0.1);color:var(--emerald)"><i class="fas fa-leaf"></i></div><div class="feed-body"><div class="feed-title">Carbon score improving</div><div class="feed-meta">38% CO₂ reduction this quarter from detection-guided sorting.</div></div></div>
+          <div class="feed-item"><div class="feed-ava" style="background:rgba(239,68,68,0.1);color:var(--red)"><i class="fas fa-exclamation"></i></div><div class="feed-body"><div class="feed-title">Low-confidence cluster: Plastic</div><div class="feed-meta">Avg 71% confidence — add more training samples.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="tab-pane" id="tab-analytics">
+      <div class="kpi-grid mb-20">
+        <div class="kpi-card" style="--kpi-color:var(--primary-gradient)"><div class="kpi-top"><div class="kpi-label">Total Scans</div></div><div class="kpi-val g-primary">5,293</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+15%</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--cyan-gradient)"><div class="kpi-top"><div class="kpi-label">Avg Accuracy</div></div><div class="kpi-val g-cyan">94.5%</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+2.3%</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--amber-gradient)"><div class="kpi-top"><div class="kpi-label">Engagement</div></div><div class="kpi-val g-amber">78%</div><div class="kpi-sub text-muted">Active users</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--green-gradient)"><div class="kpi-top"><div class="kpi-label">Material Types</div></div><div class="kpi-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">47</div><div class="kpi-sub text-muted">Categories</div></div>
+      </div>
+      <div class="cmd-grid">
+        <div class="card cmd-2"><div class="card-title mb-16"><div class="card-title-icon cti-cyan"><i class="fas fa-chart-area"></i></div>Weekly Usage Trends</div><div class="chart-box"><canvas id="analyticsChart"></canvas></div></div>
+        <div class="card cmd-1"><div class="card-title mb-16"><div class="card-title-icon cti-primary"><i class="fas fa-chart-bar"></i></div>Accuracy by Category</div><div class="chart-box"><canvas id="accuracyChart"></canvas></div></div>
+        <div class="card cmd-full"><div class="card-title mb-16"><div class="card-title-icon cti-amber"><i class="fas fa-users"></i></div>Student Analytics</div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Total Scans</th><th>Avg Accuracy</th><th>Best Material</th><th>Last Active</th><th>Progress</th></tr></thead><tbody id="analyticsStudentBody"></tbody></table></div></div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="tab-pane" id="tab-insights">
+      <div class="kpi-grid mb-20">
+        <div class="kpi-card" style="--kpi-color:var(--primary-gradient)"><div class="kpi-top"><div class="kpi-label">Total Classified</div></div><div class="kpi-val g-primary">12,547</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+8.5%</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--cyan-gradient)"><div class="kpi-top"><div class="kpi-label">Avg Time</div></div><div class="kpi-val g-cyan">2.3s</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-down"></i>-12%</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--green-gradient)"><div class="kpi-top"><div class="kpi-label">Types Tracked</div></div><div class="kpi-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">47</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--amber-gradient)"><div class="kpi-top"><div class="kpi-label">Accuracy</div></div><div class="kpi-val g-amber">96.8%</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+1.2%</div></div>
+      </div>
+      <div class="cmd-grid">
+        <div class="card cmd-2"><div class="card-title mb-16"><div class="card-title-icon cti-primary"><i class="fas fa-chart-line"></i></div>Material Type Trends</div><div class="chart-box-lg"><canvas id="materialTrendsChart"></canvas></div></div>
+        <div class="card cmd-1"><div class="card-title mb-16"><div class="card-title-icon cti-cyan"><i class="fas fa-chart-pie"></i></div>Distribution</div><div class="chart-box-lg"><canvas id="distChart"></canvas></div></div>
+        <div class="card cmd-full"><div class="card-title mb-16"><div class="card-title-icon cti-green"><i class="fas fa-bullseye"></i></div>Accuracy by Material</div><div class="chart-box"><canvas id="matAccChart"></canvas></div></div>
+      </div>
+      <!-- Reports & Exports section in Insights -->
+      <div class="card cmd-full mt-16" style="margin-top:16px">
+        <div class="card-header"><div class="card-title"><div class="card-title-icon cti-amber"><i class="fas fa-file-export"></i></div>Reports & Exports</div></div>
+        <div class="insight-report-grid">
+          <div class="report-card" onclick="exportInsightReport('monthly','pdf')">
+            <div class="report-card-icon">📊</div>
+            <h4>Monthly Report</h4>
+            <p>Comprehensive monthly insights</p>
+            <button class="btn btn-sm btn-primary" style="margin-top:12px"><i class="fas fa-file-pdf"></i> PDF Download</button>
+          </div>
+          <div class="report-card" onclick="exportInsightReport('trends','csv')">
+            <div class="report-card-icon">📈</div>
+            <h4>Trends Analysis</h4>
+            <p>6-month trend data export</p>
+            <button class="btn btn-sm btn-secondary" style="margin-top:12px"><i class="fas fa-file-csv"></i> CSV Export</button>
+          </div>
+          <div class="report-card" onclick="exportInsightReport('accuracy','pdf')">
+            <div class="report-card-icon">🎯</div>
+            <h4>Accuracy Metrics</h4>
+            <p>Per-material accuracy breakdown</p>
+            <button class="btn btn-sm btn-primary" style="margin-top:12px"><i class="fas fa-file-pdf"></i> PDF Export</button>
+          </div>
+          <div class="report-card" onclick="exportInsightReport('deep','xlsx')">
+            <div class="report-card-icon">🔍</div>
+            <h4>Deep Analysis</h4>
+            <p>Full dataset with all metrics</p>
+            <button class="btn btn-sm btn-secondary" style="margin-top:12px"><i class="fas fa-file-excel"></i> Excel Export</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODEL -->
+    <div class="tab-pane" id="tab-model">
+      <div class="kpi-grid mb-20">
+        <div class="kpi-card" style="--kpi-color:var(--green-gradient)"><div class="kpi-top"><div class="kpi-label">Model Accuracy</div></div><div class="kpi-val" style="background:var(--green-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">94.5%</div><div class="kpi-sub kpi-up"><i class="fas fa-arrow-up"></i>+2.3%</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--primary-gradient)"><div class="kpi-top"><div class="kpi-label">Version</div></div><div class="kpi-val g-primary" id="modelVersion">v2.2</div><div class="kpi-sub text-muted">Latest stable</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--cyan-gradient)"><div class="kpi-top"><div class="kpi-label">Predictions/Day</div></div><div class="kpi-val g-cyan">847</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--amber-gradient)"><div class="kpi-top"><div class="kpi-label">Last Trained</div></div><div class="kpi-val g-amber" id="lastTrained">7d</div><div class="kpi-sub text-muted">Jan 8, 2026</div></div>
+      </div>
+      <div class="cmd-grid">
+        <div class="card cmd-1">
+          <div class="card-title mb-16"><div class="card-title-icon cti-green"><i class="fas fa-brain"></i></div>Model Performance</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Precision</label><input class="form-control" id="mpPrecision" value="92.3%" readonly></div>
+            <div class="form-group"><label>Recall</label><input class="form-control" id="mpRecall" value="96.1%" readonly></div>
+            <div class="form-group"><label>F1-Score</label><input class="form-control" id="mpF1" value="94.1%" readonly></div>
+            <div class="form-group"><label>Threshold</label><input class="form-control" id="mpThreshold" type="number" value="0.5" step="0.05" min="0" max="1" onchange="applyThreshold(this.value)"></div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="retrainModel()" id="retrainBtn"><i class="fas fa-sync"></i> Retrain Model</button>
+            <button class="btn btn-secondary" onclick="exportModelWeights()"><i class="fas fa-download"></i> Export Weights</button>
+          </div>
+          <div id="retrainProgress" style="display:none;margin-top:14px">
+            <div style="font-size:0.8rem;color:var(--text-2);margin-bottom:6px">Retraining in progress…</div>
+            <div class="prog-bar"><div class="prog-fill hb-green" id="retrainBar" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="card cmd-2">
+          <div class="card-title mb-16"><div class="card-title-icon cti-cyan"><i class="fas fa-chart-line"></i></div>Accuracy Over Time</div>
+          <div class="chart-box"><canvas id="modelChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="tab-pane" id="tab-reports">
+      <div class="cmd-grid">
+        <div class="card cmd-1">
+          <div class="card-title mb-16"><div class="card-title-icon cti-primary"><i class="fas fa-file-pdf"></i></div>Export Reports</div>
+          <div class="form-group mb-16">
+            <label>Report Type</label>
+            <select class="form-control" id="reportType">
+              <option value="student">Student Activity Report</option>
+              <option value="material">Material Analytics</option>
+              <option value="model">Model Performance</option>
+              <option value="system">System Health</option>
+              <option value="daily">Daily Activity Summary</option>
+              <option value="weekly">Weekly Activity Summary</option>
+              <option value="scan">Scan Results with Images</option>
+            </select>
+          </div>
+          <div class="form-grid mb-16">
+            <div class="form-group"><label>Date From</label><input class="form-control" type="date" id="dateFrom" value="2026-01-01"></div>
+            <div class="form-group"><label>Date To</label><input class="form-control" type="date" id="dateTo" value="2026-01-15"></div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="exportReport('pdf')"><i class="fas fa-file-pdf"></i> PDF</button>
+            <button class="btn btn-secondary" onclick="exportReport('csv')"><i class="fas fa-file-csv"></i> CSV</button>
+            <button class="btn btn-secondary" onclick="exportReport('xlsx')"><i class="fas fa-file-excel"></i> Excel</button>
+          </div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-title mb-16"><div class="card-title-icon cti-cyan"><i class="fas fa-upload"></i></div>Import Data</div>
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('importFile').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleFileDrop(event)">
+            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary-light);display:block;margin-bottom:10px"></i>
+            <p style="font-weight:600;margin-bottom:4px">Drop file or click to upload</p>
+            <p class="text-muted text-sm">CSV, XLSX — max 50MB</p>
+            <p id="importFileName" style="margin-top:8px;font-size:0.8rem;color:var(--primary-light)"></p>
+          </div>
+          <input type="file" id="importFile" accept=".csv,.xlsx" style="display:none" onchange="handleFileSelect(this)">
+          <button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="importData()"><i class="fas fa-upload"></i> Import</button>
+        </div>
+        <div class="card cmd-full">
+          <div class="card-title mb-16"><div class="card-title-icon cti-amber"><i class="fas fa-calendar-check"></i></div>Scheduled Reports</div>
+          <div class="table-wrap"><table><thead><tr><th>Report</th><th>Frequency</th><th>Recipients</th><th>Last Sent</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+            <tr><td>Daily Activity Summary</td><td>Daily 8:00 AM</td><td>admin@smartvisionai.com</td><td>Today</td><td><span class="badge b-green">Active</span></td><td><div class="act-btns"><button class="act-btn blue" title="Edit"><i class="fas fa-edit"></i></button><button class="act-btn red" title="Pause"><i class="fas fa-pause"></i></button></div></td></tr>
+            <tr><td>Weekly Analytics</td><td>Monday 9:00 AM</td><td>admin, manager</td><td>Jan 13</td><td><span class="badge b-green">Active</span></td><td><div class="act-btns"><button class="act-btn blue"><i class="fas fa-edit"></i></button><button class="act-btn red"><i class="fas fa-pause"></i></button></div></td></tr>
+          </tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIT LOG -->
+    <div class="tab-pane" id="tab-audit">
+      <div class="filter-row">
+        <div class="search-box" style="min-width:240px"><i class="fas fa-search"></i><input type="text" placeholder="Search audit log…" oninput="filterAudit(this.value)"></div>
+        <select class="form-control" style="width:auto" onchange="filterAuditAction(this.value)"><option value="">All Actions</option><option>Approve</option><option>Reject</option><option>Delete</option><option>Edit</option><option>Export</option><option>Retrain</option><option>Login</option></select>
+        <button class="btn btn-secondary" onclick="exportAuditLog()"><i class="fas fa-download"></i> Export Log</button>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Action</th><th>Admin/User</th><th>Target</th><th>Timestamp</th><th>IP</th></tr></thead><tbody id="auditTableBody"></tbody></table></div>
+    </div>
+
+    <!-- ERRORS -->
+    <div class="tab-pane" id="tab-errors">
+      <div class="kpi-grid mb-20" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card" style="--kpi-color:linear-gradient(135deg,#ef4444,#f43f5e)"><div class="kpi-top"><div class="kpi-label">System Errors</div></div><div class="kpi-val" style="color:var(--red)">3</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--amber-gradient)"><div class="kpi-top"><div class="kpi-label">Failed Uploads</div></div><div class="kpi-val g-amber">7</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--primary-gradient)"><div class="kpi-top"><div class="kpi-label">Warnings</div></div><div class="kpi-val g-primary">12</div></div>
+        <div class="kpi-card" style="--kpi-color:var(--green-gradient)"><div class="kpi-top"><div class="kpi-label">System Status</div></div><div class="kpi-val" style="color:var(--emerald)">OK</div></div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Error Type</th><th>Message</th><th>Timestamp</th><th>Severity</th><th>Actions</th></tr></thead><tbody id="errorTableBody"></tbody></table></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-pane" id="tab-settings">
+      <div class="cmd-grid">
+        <div class="card cmd-1">
+          <div class="settings-section">
+            <h3><i class="fas fa-user-shield"></i> Admin Profile</h3>
+            <div class="form-grid">
+              <div class="form-group"><label>Full Name</label><input class="form-control" id="sAdminName" value="Administrator"></div>
+              <div class="form-group"><label>Email</label><input class="form-control" id="sAdminEmail" value="admin@smartvisionai.com"></div>
+              <div class="form-group"><label>Department</label><input class="form-control" placeholder="e.g., System Admin"></div>
+              <div class="form-group"><label>Role</label><input class="form-control" value="Super Admin" disabled></div>
+              <div class="form-group"><label>Phone</label><input class="form-control" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+              <div class="form-group"><label>Last Login</label><input class="form-control" value="Today, 10:30 AM" disabled></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:16px" onclick="saveAdminProfile()"><i class="fas fa-save"></i> Save Profile</button>
+          </div>
+        </div>
+        <div class="card cmd-1">
+          <div class="settings-section">
+            <h3><i class="fas fa-shield-halved"></i> Security</h3>
+            <div class="setting-row"><div class="setting-label"><h4>Two-Factor Auth</h4><p>Require 2FA for admin login</p></div><button class="toggle" onclick="toggleSetting(this,'2fa')"></button></div>
+            <div class="setting-row"><div class="setting-label"><h4>Login Notifications</h4><p>Email on admin login</p></div><button class="toggle on" onclick="toggleSetting(this,'loginNotif')"></button></div>
+            <div class="setting-row"><div class="setting-label"><h4>IP Whitelist</h4><p>Restrict to specific IPs</p></div><button class="toggle" onclick="toggleSetting(this,'ipWhitelist')"></button></div>
+            <div class="setting-row"><div class="setting-label"><h4>Session Timeout</h4><p>Auto-logout after inactivity</p></div><button class="toggle on" onclick="toggleSetting(this,'sessionTimeout')"></button></div>
+          </div>
+        </div>
+        <div class="card cmd-2">
+          <div class="settings-section">
+            <h3><i class="fas fa-cog"></i> System Configuration</h3>
+            <div class="form-grid">
+              <div class="form-group"><label>Site Title</label><input class="form-control" value="Smart Vision AI"></div>
+              <div class="form-group"><label>Max Upload (MB)</label><input class="form-control" type="number" value="16" id="maxUpload"></div>
+              <div class="form-group"><label>Email Notifications</label><select class="form-control"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="form-group"><label>Data Retention (days)</label><input class="form-control" type="number" value="90"></div>
+              <div class="form-group"><label>Detection Threshold (%)</label><input class="form-control" type="number" value="70" id="detectThreshold"></div>
+              <div class="form-group"><label>API Rate Limit (req/min)</label><input class="form-control" type="number" value="100"></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:16px" onclick="saveSystemConfig()"><i class="fas fa-save"></i> Update Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="tab-pane" id="tab-news">
+      <div class="cmd-grid">
+        <div class="card cmd-2">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-amber"><i class="fas fa-newspaper"></i></div>AI & Machine Learning</div><span class="badge b-cyan">Live Feed</span></div>
+          <div class="news-item"><div class="news-num">1</div><div class="news-body"><div class="news-title">YOLOv9 Released — New benchmark for real-time object detection</div><div class="news-source"><span class="news-tag">Computer Vision</span>TechCrunch · 2h ago</div></div></div>
+          <div class="news-item"><div class="news-num">2</div><div class="news-body"><div class="news-title">Google Gemini 2.0 Flash surpasses GPT-4o on vision benchmarks</div><div class="news-source"><span class="news-tag">LLM</span>The Verge · 5h ago</div></div></div>
+          <div class="news-item"><div class="news-num">3</div><div class="news-body"><div class="news-title">Meta SAM 2.1 enables faster zero-shot video segmentation</div><div class="news-source"><span class="news-tag">Research</span>ArXiv · 8h ago</div></div></div>
+          <div class="news-item"><div class="news-num">4</div><div class="news-body"><div class="news-title">Claude 4 announced with 200K context multimodal improvements</div><div class="news-source"><span class="news-tag">AI</span>VentureBeat · 1d ago</div></div></div>
+          <div class="news-item"><div class="news-num">5</div><div class="news-body"><div class="news-title">NVIDIA Blackwell GPU cuts inference latency 40% for vision models</div><div class="news-source"><span class="news-tag">Hardware</span>IEEE Spectrum · 2d ago</div></div></div>
+          <div class="news-item"><div class="news-num">6</div><div class="news-body"><div class="news-title">OpenAI GPT-5 sets new state-of-the-art on object classification</div><div class="news-source"><span class="news-tag">AI</span>MIT Tech Review · 3d ago</div></div></div>
+        </div>
+        <div class="card cmd-1">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-green"><i class="fas fa-recycle"></i></div>Sustainability & Waste</div></div>
+          <div class="news-item"><div class="news-num">1</div><div class="news-body"><div class="news-title">India announces ₹4,000 Cr recycling push 2025–2026</div><div class="news-source"><span class="news-tag">Policy</span>Economic Times · 5h ago</div></div></div>
+          <div class="news-item"><div class="news-num">2</div><div class="news-body"><div class="news-title">EU waste directive tightens plastic identification standards</div><div class="news-source"><span class="news-tag">Regulation</span>Reuters · 1d ago</div></div></div>
+          <div class="news-item"><div class="news-num">3</div><div class="news-body"><div class="news-title">AI-powered sorting reduces landfill by 40% in German pilot</div><div class="news-source"><span class="news-tag">Case Study</span>Guardian · 2d ago</div></div></div>
+          <div class="news-item"><div class="news-num">4</div><div class="news-body"><div class="news-title">Carbon credits grow 30% YoY with AI verification tools</div><div class="news-source"><span class="news-tag">Finance</span>Bloomberg · 3d ago</div></div></div>
+          <div class="news-item"><div class="news-num">5</div><div class="news-body"><div class="news-title">Smart bins with vision AI cut collection costs by 25%</div><div class="news-source"><span class="news-tag">Innovation</span>Forbes · 4d ago</div></div></div>
+        </div>
+        <div class="card cmd-full">
+          <div class="card-header"><div class="card-title"><div class="card-title-icon cti-primary"><i class="fas fa-globe"></i></div>Industry Highlights</div></div>
+          <div class="video-grid">
+            <div class="video-card" onclick="openVideoModal('dZfCsYkqGPs')"><img class="video-thumb" src="https://img.youtube.com/vi/dZfCsYkqGPs/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision5/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Smart Vision AI - Waste Sorting</div></div></div>
+            <div class="video-card" onclick="openVideoModal('WgPbbWmnXJ8')"><img class="video-thumb" src="https://img.youtube.com/vi/WgPbbWmnXJ8/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision6/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Circular Economy Solutions</div></div></div>
+            <div class="video-card" onclick="openVideoModal('tFNJGim3FXw')"><img class="video-thumb" src="https://img.youtube.com/vi/tFNJGim3FXw/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision7/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">AI for Sustainability</div></div></div>
+            <div class="video-card" onclick="openVideoModal('ySL_4Gg5d0I')"><img class="video-thumb" src="https://img.youtube.com/vi/ySL_4Gg5d0I/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision8/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Material Classification AI</div></div></div>
+            <div class="video-card" onclick="openVideoModal('0NNggS8Y3C0')"><img class="video-thumb" src="https://img.youtube.com/vi/0NNggS8Y3C0/mqdefault.jpg" alt="" onerror="this.src='https://picsum.photos/seed/smartvision9/320/180'"><div class="video-overlay"><div class="video-play-ico"><i class="fas fa-play" style="margin-left:2px"></i></div><div class="video-title">Smart Recycling Technology</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<!-- MODALS -->
+<!-- Logout -->
+<div class="modal-overlay" id="logoutModal">
+  <div class="modal-box" style="max-width:400px;text-align:center">
+    <div class="modal-header"><h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3><button class="modal-close-btn" onclick="closeModal('logoutModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body"><p class="text-muted">Are you sure you want to logout?</p></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('logoutModal')">Cancel</button><button class="btn btn-danger" onclick="window.location.href='/login_page'"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+  </div>
+</div>
+
+<!-- Add Student -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Add New Student</h3><button class="modal-close-btn" onclick="closeModal('addStudentModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name</label><input class="form-control" id="newStudentName" placeholder="Enter student name"></div>
+        <div class="form-group"><label>Email</label><input class="form-control" id="newStudentEmail" type="email" placeholder="student@university.edu"></div>
+        <div class="form-group"><label>Phone</label><input class="form-control" id="newStudentPhone" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="form-group"><label>Status</label><select class="form-control" id="newStudentStatus"><option value="pending">Pending</option><option value="approved">Approved</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('addStudentModal')">Cancel</button><button class="btn btn-primary" onclick="addStudent()"><i class="fas fa-plus"></i> Add Student</button></div>
+  </div>
+</div>
+
+<!-- Edit Student -->
+<div class="modal-overlay" id="editStudentModal">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Edit Student</h3><button class="modal-close-btn" onclick="closeModal('editStudentModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="editStudentId">
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name</label><input class="form-control" id="editStudentName"></div>
+        <div class="form-group"><label>Email</label><input class="form-control" id="editStudentEmail" type="email"></div>
+        <div class="form-group"><label>Phone</label><input class="form-control" id="editStudentPhone"></div>
+        <div class="form-group"><label>Status</label><select class="form-control" id="editStudentStatus"><option value="approved">Approved</option><option value="pending">Pending</option><option value="rejected">Rejected</option></select></div>
+        <div class="form-group"><label>Scans</label><input class="form-control" id="editStudentScans" type="number"></div>
+        <div class="form-group"><label>Last Active</label><input class="form-control" id="editStudentLastActive"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('editStudentModal')">Cancel</button><button class="btn btn-primary" onclick="saveStudentEdit()"><i class="fas fa-save"></i> Save Changes</button></div>
+  </div>
+</div>
+
+<!-- Add Material -->
+<div class="modal-overlay" id="addMaterialModal">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Add Material</h3><button class="modal-close-btn" onclick="closeModal('addMaterialModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Material Name</label><input class="form-control" id="newMatName" placeholder="e.g., Metal Beam"></div>
+        <div class="form-group"><label>Type</label><select class="form-control" id="newMatType"><option>Steel</option><option>Concrete</option><option>Aluminum</option><option>Plastic</option><option>Iron</option><option>Glass</option><option>Organic</option></select></div>
+        <div class="form-group"><label>Status</label><select class="form-control" id="newMatStatus"><option value="usable">Usable</option><option value="non-usable">Non-Usable</option><option value="review">Review</option></select></div>
+        <div class="form-group"><label>Confidence (%)</label><input class="form-control" id="newMatConf" type="number" value="90" min="0" max="100"></div>
+        <div class="form-group"><label>Submitted By</label><input class="form-control" id="newMatBy" placeholder="Student name"></div>
+        <div class="form-group"><label>Date Added</label><input class="form-control" id="newMatDate" type="date" value="2026-01-15"></div>
+      </div>
+      <div class="form-group" style="margin-top:14px"><label>Description</label><textarea class="form-control" id="newMatDesc" placeholder="Material description…"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('addMaterialModal')">Cancel</button><button class="btn btn-primary" onclick="addMaterial()"><i class="fas fa-plus"></i> Add</button></div>
+  </div>
+</div>
+
+<!-- Video -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal-box" style="max-width:900px">
+    <div class="modal-header"><h3><i class="fab fa-youtube" style="color:#ff0000"></i> Video Player</h3><button class="modal-close-btn" onclick="closeVideoModal()"><i class="fas fa-times"></i></button></div>
+    <div style="position:relative;aspect-ratio:16/9"><iframe id="videoIframe" src="" style="position:absolute;inset:0;width:100%;height:100%;border:none" allowfullscreen allow="autoplay;encrypted-media"></iframe></div>
+  </div>
+</div>
+
+<!-- Alert Detail -->
+<div class="modal-overlay" id="alertDetailModal">
+  <div class="modal-box" style="max-width:480px">
+    <div class="modal-header"><h3 id="alertDetailTitle">Alert Detail</h3><button class="modal-close-btn" onclick="closeModal('alertDetailModal')"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="alertDetailBody"></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('alertDetailModal')">Close</button><button class="btn btn-green" onclick="resolveCurrentAlert()"><i class="fas fa-check"></i> Resolve</button></div>
+  </div>
+</div>
+
+<script src="/static/js/config.js"></script>
+<script>
+// ═══════════════════════════════════════════
+// DATA STORE
+// ═══════════════════════════════════════════
+const DB = {
+  students: [
+    {id:1, name:'John Doe', email:'john.doe@university.edu', phone:'+91 98765 43210', status:'approved', joined:'Jan 5, 2026', scans:124, lastActive:'Today 2:30 PM', accuracy:96.2},
+    {id:2, name:'Sarah Williams', email:'s.williams@university.edu', phone:'+91 87654 32109', status:'approved', joined:'Jan 8, 2026', scans:98, lastActive:'Today 1:15 PM', accuracy:94.5},
+    {id:3, name:'Mike Johnson', email:'m.johnson@nit.edu', phone:'+91 76543 21098', status:'pending', joined:'Jan 14, 2026', scans:0, lastActive:'—', accuracy:0},
+    {id:4, name:'Ananya Kumar', email:'ananya.k@nit.edu', phone:'+91 65432 10987', status:'pending', joined:'Jan 15, 2026', scans:0, lastActive:'—', accuracy:0},
+    {id:5, name:'Rohan Verma', email:'rohan.v@iit.edu', phone:'+91 54321 09876', status:'pending', joined:'Jan 14, 2026', scans:0, lastActive:'—', accuracy:0},
+    {id:6, name:'Raj Mehta', email:'r.mehta@iit.edu', phone:'+91 43210 98765', status:'approved', joined:'Dec 20, 2025', scans:87, lastActive:'Yesterday 5:00 PM', accuracy:93.1},
+  ],
+  detections: [
+    {id:1, name:'Metal Beam', type:'Steel', status:'usable', confidence:95.2, date:'Jan 15, 2026', by:'John Doe', image:''},
+    {id:2, name:'Plastic Sheet', type:'HDPE', status:'review', confidence:62.1, date:'Jan 15, 2026', by:'Sarah W.', image:''},
+    {id:3, name:'Aluminum Scrap', type:'Aluminum', status:'non-usable', confidence:88.7, date:'Jan 13, 2026', by:'Mike J.', image:''},
+    {id:4, name:'Concrete Block', type:'Concrete', status:'usable', confidence:96.2, date:'Jan 12, 2026', by:'John Doe', image:''},
+    {id:5, name:'Iron Rod', type:'Iron', status:'usable', confidence:97.8, date:'Jan 11, 2026', by:'Sarah W.', image:''},
+  ],
+  alerts: [
+    {id:1, type:'Low Confidence', msg:'Plastic Sheet detection at 62% — below 70% threshold', time:'14 min ago', severity:'critical', read:false},
+    {id:2, type:'Pending Approval', msg:'3 student registrations awaiting admin review', time:'2 min ago', severity:'warning', read:false},
+    {id:3, type:'Storage', msg:'Storage at 72% — consider cleanup', time:'1 hr ago', severity:'warning', read:false},
+    {id:4, type:'Failed Upload', msg:'user@nit.edu file upload failed — 18MB exceeds limit', time:'2 hr ago', severity:'warning', read:false},
+    {id:5, type:'Model Drift', msg:'Detected slight accuracy regression for Plastic category', time:'3 hr ago', severity:'critical', read:false},
+    {id:6, type:'API Rate', msg:'API rate limit approached 85% on detection endpoint', time:'4 hr ago', severity:'warning', read:false},
+    {id:7, type:'New Registration', msg:'Ananya Kumar registered from NIT — awaiting approval', time:'5 hr ago', severity:'info', read:false},
+  ],
+  sessions: [
+    {student:'john.doe@university.edu', login:'Jan 15, 10:30 AM', logout:'Jan 15, 11:45 AM', duration:'1h 15m'},
+    {student:'s.williams@university.edu', login:'Jan 15, 9:00 AM', logout:'Active', duration:'—'},
+    {student:'r.mehta@iit.edu', login:'Jan 14, 2:00 PM', logout:'Jan 14, 4:30 PM', duration:'2h 30m'},
+    {student:'john.doe@university.edu', login:'Jan 14, 11:00 AM', logout:'Jan 14, 12:00 PM', duration:'1h 0m'},
+  ],
+  scans: [
+    {img:'', student:'John Doe', email:'john.doe@university.edu', type:'Classification', material:'Metal Beam', date:'Jan 15, 11:20 AM', result:'usable'},
+    {img:'', student:'Sarah W.', email:'s.williams@university.edu', type:'Classification', material:'Plastic Sheet', date:'Jan 15, 9:45 AM', result:'review'},
+    {img:'', student:'John Doe', email:'john.doe@university.edu', type:'Classification', material:'Concrete Block', date:'Jan 14, 3:00 PM', result:'usable'},
+    {img:'', student:'Raj Mehta', email:'r.mehta@iit.edu', type:'Classification', material:'Iron Rod', date:'Jan 14, 2:30 PM', result:'usable'},
+  ],
+  auditLog: [
+    {action:'Approve', user:'Administrator', target:'Student: john.doe@university.edu', time:'Jan 15, 10:30 AM', ip:'192.168.1.1'},
+    {action:'Edit', user:'Administrator', target:'Material: Metal Beam (ID 1042)', time:'Jan 15, 9:15 AM', ip:'192.168.1.1'},
+    {action:'Delete', user:'Administrator', target:'Material: Old Sample (ID 998)', time:'Jan 14, 3:00 PM', ip:'192.168.1.1'},
+    {action:'Export', user:'Administrator', target:'Report: Weekly Analytics CSV', time:'Jan 13, 9:00 AM', ip:'192.168.1.1'},
+    {action:'Retrain', user:'Administrator', target:'Model v2.2.0', time:'Jan 8, 11:45 AM', ip:'192.168.1.1'},
+    {action:'Login', user:'john.doe@university.edu', target:'Student Portal', time:'Jan 15, 10:30 AM', ip:'192.168.1.45'},
+    {action:'Login', user:'s.williams@university.edu', target:'Student Portal', time:'Jan 15, 9:00 AM', ip:'192.168.1.67'},
+  ],
+  errors: [
+    {type:'Database Conn.', msg:'Connection timeout after 30s', time:'Jan 15, 02:45 PM', severity:'critical'},
+    {type:'File Upload', msg:'File size exceeds 16MB limit', time:'Jan 15, 01:20 PM', severity:'warning'},
+    {type:'Model Inference', msg:'Prediction timeout on large batch', time:'Jan 14, 11:00 AM', severity:'warning'},
+  ],
+  notifications: [
+    {id:1, icon:'fa-user-clock', color:'rgba(239,68,68,0.1)', icolor:'var(--red)', title:'3 pending student approvals', time:'2 min ago', read:false},
+    {id:2, icon:'fa-exclamation-triangle', color:'rgba(245,158,11,0.1)', icolor:'var(--amber)', title:'Low confidence detection (62%) flagged', time:'14 min ago', read:false},
+    {id:3, icon:'fa-sync', color:'rgba(16,185,129,0.1)', icolor:'var(--emerald)', title:'Model retrained — accuracy +1.4%', time:'1 hr ago', read:false},
+    {id:4, icon:'fa-upload', color:'rgba(99,102,241,0.1)', icolor:'var(--primary-light)', title:'Bulk import completed (342 materials)', time:'3 hrs ago', read:false},
+    {id:5, icon:'fa-user-plus', color:'rgba(6,182,212,0.1)', icolor:'var(--cyan)', title:'Ananya Kumar registered — pending approval', time:'5 hrs ago', read:false},
+  ]
+};
+
+let currentAlertId = null;
+
+// ═══════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════
+function toggleTheme(){
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeIcon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+  document.getElementById('themeLabel').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  setTimeout(initAllCharts, 100);
+}
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+const tabMeta = {
+  'overview':{'title':'Command Center','crumb':'Overview'},
+  'students':{'title':'Students','crumb':'Students'},
+  'detection':{'title':'Detection Logs','crumb':'Detection'},
+  'alerts':{'title':'Live Alerts','crumb':'Alerts'},
+  'ai':{'title':'AI Copilot','crumb':'AI Assistant'},
+  'analytics':{'title':'Analytics','crumb':'Analytics'},
+  'insights':{'title':'Detection Insights','crumb':'Insights'},
+  'news':{'title':'News & Trends','crumb':'News'},
+  'model':{'title':'AI Model','crumb':'Model'},
+  'reports':{'title':'Reports','crumb':'Reports'},
+  'audit':{'title':'Audit Log','crumb':'Audit'},
+  'errors':{'title':'Error Monitor','crumb':'Errors'},
+  'settings':{'title':'Settings','crumb':'Settings'},
+};
+
+function switchTab(name, el, subTab){
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pane = document.getElementById('tab-'+name);
+  if(pane) pane.classList.add('active');
+  if(el) el.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item').forEach(n=>{
+      if(n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+name+"'")) n.classList.add('active');
+    });
+  }
+  const meta = tabMeta[name]||{title:name,crumb:name};
+  document.getElementById('pageTitle').textContent = meta.title;
+  document.getElementById('pageCrumb').textContent = meta.crumb;
+  if(window.innerWidth < 1100) closeSidebar();
+  if(['analytics','insights','model','overview'].includes(name)) setTimeout(initAllCharts,80);
+  if(name === 'students') renderStudents();
+  if(name === 'alerts') renderAlerts();
+  if(name === 'audit') renderAuditLog();
+  if(name === 'errors') renderErrors();
+  if(name === 'detection') renderDetections();
+  if(subTab) setTimeout(()=>{ const btn = document.querySelector(`[onclick*="switchSubTab('${subTab}'"]`); if(btn) btn.click(); },100);
+}
+
+function switchSubTab(id, el){
+  document.querySelectorAll('.sub-pane').forEach(p => p.style.display='none');
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(id);
+  if(pane) pane.style.display='block';
+  if(el) el.classList.add('active');
+  if(id === 'sActivity') renderActivityLogs();
+  if(id === 'sApproval') renderApprovals();
+}
+
+// ═══════════════════════════════════════════
+// SIDEBAR / MODALS
+// ═══════════════════════════════════════════
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('mob-open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('mob-open'); }
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if(e.target === o) o.classList.remove('open'); });
+});
+function openVideoModal(id){
+  document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  openModal('videoModal');
+}
+function closeVideoModal(){
+  document.getElementById('videoIframe').src = '';
+  closeModal('videoModal');
+}
+document.getElementById('videoModal').addEventListener('click', function(e){ if(e.target===this) closeVideoModal(); });
+
+// ═══════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════
+function updateClock(){
+  const now = new Date();
+  document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + ' IST';
+}
+setInterval(updateClock,1000); updateClock();
+
+// ═══════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════
+function renderNotifications(){
+  const list = document.getElementById('notifList');
+  const unread = DB.notifications.filter(n=>!n.read).length;
+  document.getElementById('notifCount').textContent = unread;
+  document.getElementById('notifDot').style.display = unread > 0 ? 'block' : 'none';
+  list.innerHTML = DB.notifications.map(n => `
+    <div class="notif-item ${n.read?'read':''}" onclick="markNotifRead(${n.id})">
+      <div class="notif-icon" style="background:${n.color};color:${n.icolor}"><i class="fas ${n.icon}"></i></div>
+      <div class="notif-text"><div class="notif-title">${n.title}</div><div class="notif-time">${n.time}</div></div>
+      ${!n.read ? '<div style="width:7px;height:7px;background:var(--primary);border-radius:50%;flex-shrink:0;margin-top:6px"></div>' : ''}
+    </div>
+  `).join('');
+}
+function markNotifRead(id){
+  const n = DB.notifications.find(x=>x.id===id);
+  if(n) n.read = true;
+  renderNotifications();
+}
+function markAllNotifsRead(){
+  DB.notifications.forEach(n=>n.read=true);
+  renderNotifications();
+}
+function toggleNotifDropdown(){ document.getElementById('notifDropdown').classList.toggle('open'); }
+function closeNotifDropdown(){ document.getElementById('notifDropdown').classList.remove('open'); }
+document.addEventListener('click', e=>{
+  const dd = document.getElementById('notifDropdown');
+  if(!dd.contains(e.target) && !document.getElementById('notifBtn').contains(e.target)) dd.classList.remove('open');
+});
+
+// ═══════════════════════════════════════════
+// STUDENTS
+// ═══════════════════════════════════════════
+function getInitials(name){ return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+const avatarColors = ['linear-gradient(135deg,#6366f1,#a855f7)','linear-gradient(135deg,#06b6d4,#10b981)','linear-gradient(135deg,#f59e0b,#f43f5e)','linear-gradient(135deg,#10b981,#06b6d4)','linear-gradient(135deg,#a855f7,#6366f1)','linear-gradient(135deg,#f43f5e,#f59e0b)'];
+
+function renderStudents(filter='', statusF=''){
+  const tbody = document.getElementById('studentTableBody');
+  let rows = DB.students;
+  if(filter) rows = rows.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()) || s.email.toLowerCase().includes(filter.toLowerCase()));
+  if(statusF) rows = rows.filter(s => s.status === statusF);
+  const approvedCount = DB.students.filter(s=>s.status==='approved').length;
+  const pendingCount = DB.students.filter(s=>s.status==='pending').length;
+  document.getElementById('totalStudentsKPI').textContent = DB.students.length;
+  document.getElementById('studBadge').textContent = pendingCount;
+  document.getElementById('approvalBadge').textContent = pendingCount;
+  tbody.innerHTML = rows.map((s,i) => {
+    const bclass = s.status==='approved'?'b-green':s.status==='pending'?'b-amber':'b-red';
+    const color = avatarColors[i % avatarColors.length];
+    return `<tr id="srow-${s.id}">
+      <td><div class="cell-user"><div class="cell-avatar" style="background:${color}">${getInitials(s.name)}</div><div><div class="cell-name">${s.name}</div><div class="cell-sub">${s.email}</div></div></div></td>
+      <td><span class="badge ${bclass}" id="sstatus-${s.id}">${s.status}</span></td>
+      <td>${s.joined}</td>
+      <td id="sscans-${s.id}">${s.scans}</td>
+      <td id="slast-${s.id}">${s.lastActive}</td>
+      <td><div class="act-btns">
+        ${s.status==='pending' ? `
+          <button class="act-btn green" title="Approve" onclick="approveStudent(${s.id})"><i class="fas fa-check"></i></button>
+          <button class="act-btn red" title="Reject" onclick="rejectStudent(${s.id})"><i class="fas fa-times"></i></button>
+        ` : `
+          <button class="act-btn blue" title="View" onclick="viewStudent(${s.id})"><i class="fas fa-eye"></i></button>
+          <button class="act-btn" title="Edit" onclick="editStudent(${s.id})"><i class="fas fa-edit"></i></button>
+          <button class="act-btn red" title="Block" onclick="blockStudent(${s.id})"><i class="fas fa-ban"></i></button>
+        `}
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterStudents(){
+  renderStudents(document.getElementById('studentSearch').value, document.getElementById('studentStatusFilter').value);
+}
+
+function approveStudent(id){
+  const s = DB.students.find(x=>x.id===id);
+  if(!s) return;
+  s.status = 'approved';
+  s.lastActive = 'Just now';
+  addAuditEntry('Approve', `Student: ${s.email}`);
+  addNotification('fa-user-check','rgba(16,185,129,0.1)','var(--emerald)',`${s.name} approved successfully`,'Just now');
+  renderStudents(); renderApprovals();
+  showToast(`✅ ${s.name} approved!`, 'green');
+}
+
+function rejectStudent(id){
+  const s = DB.students.find(x=>x.id===id);
+  if(!s) return;
+  s.status = 'rejected';
+  addAuditEntry('Reject', `Student: ${s.email}`);
+  renderStudents(); renderApprovals();
+  showToast(`❌ ${s.name} rejected.`, 'red');
+}
+
+function blockStudent(id){
+  const s = DB.students.find(x=>x.id===id);
+  if(!s) return;
+  s.status = 'rejected';
+  addAuditEntry('Block', `Student: ${s.email}`);
+  renderStudents();
+  showToast(`🚫 ${s.name} blocked.`, 'red');
+}
+
+function editStudent(id){
+  const s = DB.students.find(x=>x.id===id);
+  if(!s) return;
+  document.getElementById('editStudentId').value = id;
+  document.getElementById('editStudentName').value = s.name;
+  document.getElementById('editStudentEmail').value = s.email;
+  document.getElementById('editStudentPhone').value = s.phone||'';
+  document.getElementById('editStudentStatus').value = s.status;
+  document.getElementById('editStudentScans').value = s.scans;
+  document.getElementById('editStudentLastActive').value = s.lastActive;
+  openModal('editStudentModal');
+}
+
+function saveStudentEdit(){
+  const id = parseInt(document.getElementById('editStudentId').value);
+  const s = DB.students.find(x=>x.id===id);
+  if(!s) return;
+  s.name = document.getElementById('editStudentName').value;
+  s.email = document.getElementById('editStudentEmail').value;
+  s.phone = document.getElementById('editStudentPhone').value;
+  s.status = document.getElementById('editStudentStatus').value;
+  s.scans = parseInt(document.getElementById('editStudentScans').value)||0;
+  s.lastActive = document.getElementById('editStudentLastActive').value;
+  addAuditEntry('Edit', `Student: ${s.email}`);
+  closeModal('editStudentModal');
+  renderStudents();
+  showToast('✏️ Student updated!', 'blue');
+}
+
+function viewStudent(id){
+  const s = DB.students.find(x=>x.id===id);
+  if(!s) return;
+  alert(`Student Details:\n\nName: ${s.name}\nEmail: ${s.email}\nStatus: ${s.status}\nScans: ${s.scans}\nAccuracy: ${s.accuracy}%\nJoined: ${s.joined}\nLast Active: ${s.lastActive}`);
+}
+
+function addStudent(){
+  const name = document.getElementById('newStudentName').value.trim();
+  const email = document.getElementById('newStudentEmail').value.trim();
+  const phone = document.getElementById('newStudentPhone').value.trim();
+  const status = document.getElementById('newStudentStatus').value;
+  if(!name || !email){ showToast('⚠️ Name and email required!', 'amber'); return; }
+  const newS = {id: Date.now(), name, email, phone, status, joined: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), scans:0, lastActive:'—', accuracy:0};
+  DB.students.push(newS);
+  addAuditEntry('Add', `Student: ${email}`);
+  addNotification('fa-user-plus','rgba(6,182,212,0.1)','var(--cyan)',`New student ${name} added`,'Just now');
+  closeModal('addStudentModal');
+  document.getElementById('newStudentName').value='';
+  document.getElementById('newStudentEmail').value='';
+  document.getElementById('newStudentPhone').value='';
+  renderStudents();
+  showToast(`✅ Student ${name} added!`, 'green');
+}
+
+// ═══════════════════════════════════════════
+// ACTIVITY LOGS
+// ═══════════════════════════════════════════
+async function renderActivityLogs(){
+  try {
+    const response = await fetch('/api/admin/all_sessions');
+    const data = await response.json();
+    
+    if (data.success && data.sessions) {
+      const sessions = data.sessions;
+      
+      // Calculate metrics
+      const totalSessions = sessions.length;
+      const activeSessions = sessions.filter(s => !s.logout_time).length;
+      
+      // Calculate average duration for completed sessions
+      const completedSessions = sessions.filter(s => s.logout_time);
+      let avgDuration = '—';
+      if (completedSessions.length > 0) {
+        const totalMinutes = completedSessions.reduce((sum, s) => {
+          if (s.login_time && s.logout_time) {
+            const login = new Date(s.login_time);
+            const logout = new Date(s.logout_time);
+            return sum + (logout - login) / (1000 * 60); // minutes
+          }
+          return sum;
+        }, 0);
+        const avgMins = Math.round(totalMinutes / completedSessions.length);
+        const hours = Math.floor(avgMins / 60);
+        const mins = avgMins % 60;
+        avgDuration = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+      }
+      
+      // Update metrics
+      document.getElementById('totalSessions').textContent = totalSessions;
+      document.getElementById('activeSessions').textContent = activeSessions;
+      document.getElementById('avgDuration').textContent = avgDuration;
+      
+      // Render session table
+      const tbody = document.getElementById('sessionTableBody');
+      if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-3)">No session data available</td></tr>';
+      } else {
+        tbody.innerHTML = sessions.map(s => {
+          const loginTime = s.login_time ? new Date(s.login_time).toLocaleString('en-IN', { 
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+          }) : '—';
+          const logoutTime = s.logout_time ? new Date(s.logout_time).toLocaleString('en-IN', { 
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+          }) : '<span class="badge b-green">Active</span>';
+          
+          let duration = '—';
+          if (s.login_time && s.logout_time) {
+            const login = new Date(s.login_time);
+            const logout = new Date(s.logout_time);
+            const totalMins = Math.round((logout - login) / (1000 * 60));
+            const hours = Math.floor(totalMins / 60);
+            const mins = totalMins % 60;
+            duration = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+          }
+          
+          return `<tr>
+            <td>${s.email || 'Unknown'}</td>
+            <td>${loginTime}</td>
+            <td>${logoutTime}</td>
+            <td>${duration}</td>
+            <td><span class="badge b-gray">${Math.floor(Math.random()*10)+1} actions</span></td>
+          </tr>`;
+        }).join('');
+      }
+    } else {
+      console.error('Failed to fetch session data:', data);
+      // Show error state
+      document.getElementById('totalSessions').textContent = '—';
+      document.getElementById('activeSessions').textContent = '—';
+      document.getElementById('avgDuration').textContent = '—';
+      document.getElementById('sessionTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--red)">Failed to load session data</td></tr>';
+    }
+  } catch (error) {
+    console.error('Error fetching session data:', error);
+    // Show error state
+    document.getElementById('totalSessions').textContent = '—';
+    document.getElementById('activeSessions').textContent = '—';
+    document.getElementById('avgDuration').textContent = '—';
+    document.getElementById('sessionTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--red)">Error loading session data</td></tr>';
+  }
+  const scanBody = document.getElementById('scanHistoryBody');
+  scanBody.innerHTML = DB.scans.map(s=>{
+    const rc = s.result==='usable'?'b-green':s.result==='review'?'b-amber':'b-red';
+    return `<tr>
+      <td><div style="width:40px;height:40px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-3)"><i class="fas fa-image"></i></div></td>
+      <td><div class="cell-user"><div class="cell-avatar" style="background:var(--primary-gradient);width:28px;height:28px;font-size:0.65rem">${getInitials(s.student)}</div><div><div class="cell-name" style="font-size:0.82rem">${s.student}</div><div class="cell-sub">${s.email}</div></div></div></td>
+      <td><span class="badge b-cyan">${s.type}</span></td>
+      <td><span class="badge b-blue">${s.material}</span></td>
+      <td>${s.date}</td>
+      <td><span class="badge ${rc}">${s.result}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// APPROVALS
+// ═══════════════════════════════════════════
+function renderApprovals(){
+  const pending = DB.students.filter(s=>s.status==='pending');
+  document.getElementById('pendingTableBody').innerHTML = pending.map(s=>`
+    <tr><td><div class="cell-user"><div class="cell-avatar" style="background:var(--primary-gradient)">${getInitials(s.name)}</div><div><div class="cell-name">${s.name}</div></div></div></td>
+      <td>${s.email}</td><td>${s.joined}</td>
+      <td><span class="badge b-amber">Pending</span></td>
+      <td><div class="act-btns">
+        <button class="act-btn green" title="Approve" onclick="approveStudent(${s.id});switchSubTab('sApproval',null)"><i class="fas fa-check"></i></button>
+        <button class="act-btn red" title="Reject" onclick="rejectStudent(${s.id});switchSubTab('sApproval',null)"><i class="fas fa-times"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+  document.getElementById('materialApprovalBody').innerHTML = DB.detections.filter(d=>d.status==='review').map(d=>`
+    <tr><td>—</td><td>${d.name}</td><td>${d.date}</td><td><span class="badge b-amber">Pending</span></td>
+      <td><div class="act-btns">
+        <button class="act-btn blue" title="View"><i class="fas fa-eye"></i></button>
+        <button class="act-btn green" title="Approve" onclick="approveDetection(${d.id})"><i class="fas fa-check"></i></button>
+        <button class="act-btn red" title="Reject"><i class="fas fa-times"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function approveDetection(id){
+  const d = DB.detections.find(x=>x.id===id);
+  if(d){ d.status='usable'; renderApprovals(); renderDetections(); showToast('✅ Material approved!','green'); }
+}
+
+// ═══════════════════════════════════════════
+// DETECTIONS
+// ═══════════════════════════════════════════
+function renderDetections(filter='', statusF=''){
+  let rows = DB.detections;
+  if(filter) rows = rows.filter(d=>d.name.toLowerCase().includes(filter.toLowerCase())||d.type.toLowerCase().includes(filter.toLowerCase()));
+  if(statusF) rows = rows.filter(d=>d.status===statusF);
+  const tbody = document.getElementById('detectionTableBody');
+  tbody.innerHTML = rows.map(d=>{
+    const bc = d.status==='usable'?'b-green':d.status==='review'?'b-amber':'b-red';
+    const cc = d.confidence < 70 ? 'style="color:var(--amber)"' : d.confidence > 90 ? 'style="color:var(--emerald)"' : '';
+    return `<tr>
+      <td><div style="width:40px;height:40px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-3)"><i class="fas fa-image"></i></div></td>
+      <td><strong>${d.name}</strong></td><td>${d.type}</td>
+      <td><span class="badge ${bc}">${d.status}</span></td>
+      <td><span class="font-mono" ${cc}>${d.confidence}%</span></td>
+      <td>${d.date}</td><td>${d.by}</td>
+      <td><div class="act-btns">
+        <button class="act-btn blue" title="View"><i class="fas fa-eye"></i></button>
+        <button class="act-btn" title="Edit" onclick="editDetection(${d.id})"><i class="fas fa-edit"></i></button>
+        <button class="act-btn red" title="Delete" onclick="deleteDetection(${d.id})"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterDetections(){
+  renderDetections(document.getElementById('detectSearch').value, document.getElementById('detectStatusFilter').value);
+}
+
+function editDetection(id){
+  const d = DB.detections.find(x=>x.id===id);
+  if(!d) return;
+  const ns = prompt('New status (usable/non-usable/review):', d.status);
+  if(ns && ['usable','non-usable','review'].includes(ns.toLowerCase())){
+    d.status = ns.toLowerCase();
+    addAuditEntry('Edit', `Material: ${d.name}`);
+    renderDetections(); showToast('✏️ Detection updated!','blue');
+  }
+}
+
+function deleteDetection(id){
+  if(!confirm('Delete this detection?')) return;
+  const idx = DB.detections.findIndex(x=>x.id===id);
+  if(idx>-1){ const d=DB.detections[idx]; addAuditEntry('Delete',`Material: ${d.name}`); DB.detections.splice(idx,1); renderDetections(); showToast('🗑️ Deleted.','red'); }
+}
+
+function addMaterial(){
+  const name=document.getElementById('newMatName').value.trim();
+  if(!name){showToast('⚠️ Name required!','amber');return;}
+  const d={id:Date.now(),name,type:document.getElementById('newMatType').value,status:document.getElementById('newMatStatus').value,confidence:parseFloat(document.getElementById('newMatConf').value),date:document.getElementById('newMatDate').value,by:document.getElementById('newMatBy').value||'Admin'};
+  DB.detections.push(d);
+  addAuditEntry('Add',`Material: ${name}`);
+  closeModal('addMaterialModal');
+  renderDetections();
+  showToast(`✅ ${name} added!`,'green');
+}
+
+// ═══════════════════════════════════════════
+// ALERTS
+// ═══════════════════════════════════════════
+function renderAlerts(){
+  const container = document.getElementById('alertsList');
+  const unread = DB.alerts.filter(a=>!a.read);
+  document.getElementById('alertBadge').textContent = unread.length;
+  document.getElementById('overviewAlerts').textContent = unread.length;
+  document.getElementById('criticalCount').textContent = DB.alerts.filter(a=>a.severity==='critical'&&!a.read).length;
+  document.getElementById('warningCount').textContent = DB.alerts.filter(a=>a.severity==='warning'&&!a.read).length;
+  document.getElementById('resolvedCount').textContent = DB.alerts.filter(a=>a.read).length;
+  container.innerHTML = DB.alerts.map(a=>{
+    const sc=a.severity==='critical'?'b-red':a.severity==='warning'?'b-amber':'b-cyan';
+    const ic=a.severity==='critical'?'var(--red)':a.severity==='warning'?'var(--amber)':'var(--cyan)';
+    const ibg=a.severity==='critical'?'rgba(239,68,68,0.1)':a.severity==='warning'?'rgba(245,158,11,0.1)':'rgba(6,182,212,0.1)';
+    const ii=a.severity==='critical'?'fa-exclamation-circle':a.severity==='warning'?'fa-exclamation-triangle':'fa-info-circle';
+    return `<div class="alert-item ${a.read?'read':''}" id="alert-${a.id}">
+      <div style="width:38px;height:38px;border-radius:10px;background:${ibg};color:${ic};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas ${ii}"></i></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:0.88rem;margin-bottom:2px">${a.type}</div>
+        <div style="font-size:0.8rem;color:var(--text-2);margin-bottom:4px">${a.msg}</div>
+        <div style="font-size:0.72rem;color:var(--text-3);font-family:var(--font-mono)">${a.time}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
+        <span class="badge ${sc}">${a.severity}</span>
+        <div class="act-btns">
+          <button class="act-btn blue" title="View" onclick="viewAlert(${a.id})"><i class="fas fa-eye"></i></button>
+          ${!a.read ? `<button class="act-btn green" title="Mark Read" onclick="markAlertRead(${a.id})"><i class="fas fa-check"></i></button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function markAlertRead(id){
+  const a=DB.alerts.find(x=>x.id===id);
+  if(a){a.read=true;renderAlerts();showToast('✅ Alert resolved.','green');}
+}
+
+function markAllAlertsRead(){
+  DB.alerts.forEach(a=>a.read=true);
+  renderAlerts();
+  showToast('✅ All alerts resolved.','green');
+}
+
+function viewAlert(id){
+  currentAlertId=id;
+  const a=DB.alerts.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('alertDetailTitle').textContent = a.type;
+  document.getElementById('alertDetailBody').innerHTML = `
+    <div style="margin-bottom:14px"><span class="badge ${a.severity==='critical'?'b-red':a.severity==='warning'?'b-amber':'b-cyan'}">${a.severity.toUpperCase()}</span></div>
+    <p style="margin-bottom:12px;font-size:0.9rem">${a.msg}</p>
+    <div style="font-size:0.78rem;color:var(--text-2)"><i class="fas fa-clock"></i> ${a.time}</div>
+  `;
+  openModal('alertDetailModal');
+}
+
+function resolveCurrentAlert(){
+  if(currentAlertId) markAlertRead(currentAlertId);
+  closeModal('alertDetailModal');
+}
+
+// ═══════════════════════════════════════════
+// AUDIT LOG
+// ═══════════════════════════════════════════
+function renderAuditLog(filter='', actionF=''){
+  let rows = DB.auditLog;
+  if(filter) rows = rows.filter(r=>r.target.toLowerCase().includes(filter.toLowerCase())||r.user.toLowerCase().includes(filter.toLowerCase()));
+  if(actionF) rows = rows.filter(r=>r.action.toLowerCase()===actionF.toLowerCase());
+  const tbody = document.getElementById('auditTableBody');
+  const ac={'Approve':'b-green','Reject':'b-red','Delete':'b-red','Edit':'b-amber','Export':'b-cyan','Retrain':'b-blue','Add':'b-green','Block':'b-red','Login':'b-gray'};
+  tbody.innerHTML = rows.map(r=>`
+    <tr><td><span class="badge ${ac[r.action]||'b-gray'}">${r.action}</span></td>
+      <td>${r.user}</td><td>${r.target}</td>
+      <td class="font-mono text-sm">${r.time}</td>
+      <td class="font-mono text-sm">${r.ip}</td>
+    </tr>
+  `).join('');
+}
+
+function filterAudit(v){ renderAuditLog(v); }
+function filterAuditAction(v){ renderAuditLog('',v); }
+
+function addAuditEntry(action, target){
+  DB.auditLog.unshift({action, user:'Administrator', target, time: new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}), ip:'192.168.1.1'});
+}
+
+function exportAuditLog(){
+  const csv = ['Action,Admin,Target,Timestamp,IP',...DB.auditLog.map(r=>`${r.action},${r.user},"${r.target}",${r.time},${r.ip}`)].join('\n');
+  downloadFile('audit_log.csv', csv, 'text/csv');
+  showToast('📥 Audit log exported!','green');
+}
+
+// ═══════════════════════════════════════════
+// ERRORS
+// ═══════════════════════════════════════════
+function renderErrors(){
+  const tbody = document.getElementById('errorTableBody');
+  tbody.innerHTML = DB.errors.map(e=>{
+    const bc=e.severity==='critical'?'b-red':'b-amber';
+    return `<tr><td>${e.type}</td><td>${e.msg}</td><td class="font-mono text-sm">${e.time}</td><td><span class="badge ${bc}">${e.severity}</span></td>
+      <td><div class="act-btns"><button class="act-btn blue"><i class="fas fa-eye"></i></button><button class="act-btn green" onclick="resolveError(this)"><i class="fas fa-check"></i></button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function resolveError(btn){ btn.closest('tr').style.opacity='0.4'; showToast('✅ Error resolved.','green'); }
+
+// ═══════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════
+function renderAnalyticsStudents(){
+  const tbody = document.getElementById('analyticsStudentBody');
+  const approved = DB.students.filter(s=>s.status==='approved');
+  tbody.innerHTML = approved.map(s=>`
+    <tr><td><div class="cell-user"><div class="cell-avatar" style="background:var(--primary-gradient)">${getInitials(s.name)}</div><div><div class="cell-name">${s.name}</div></div></div></td>
+      <td>${s.scans}</td>
+      <td><span class="font-mono" style="color:var(--emerald)">${s.accuracy}%</span></td>
+      <td>Metal Beam</td><td>${s.lastActive}</td>
+      <td><div class="prog-bar" style="width:120px"><div class="prog-fill hb-green" style="width:${s.accuracy}%"></div></div></td>
+    </tr>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════
+// MODEL
+// ═══════════════════════════════════════════
+let modelVersion = 2.2;
+function retrainModel(){
+  const btn = document.getElementById('retrainBtn');
+  const prog = document.getElementById('retrainProgress');
+  const bar = document.getElementById('retrainBar');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div> Retraining…';
+  prog.style.display='block';
+  let pct=0;
+  const iv = setInterval(()=>{
+    pct+=Math.random()*8;
+    if(pct>=100){pct=100;clearInterval(iv);
+      modelVersion = Math.round((modelVersion + 0.1)*10)/10;
+      document.getElementById('modelVersion').textContent = 'v'+modelVersion.toFixed(1);
+      document.getElementById('lastTrained').textContent = '0d';
+      btn.disabled=false;
+      btn.innerHTML='<i class="fas fa-sync"></i> Retrain Model';
+      prog.style.display='none';
+      bar.style.width='0%';
+      addAuditEntry('Retrain',`Model v${modelVersion.toFixed(1)}`);
+      addNotification('fa-sync','rgba(16,185,129,0.1)','var(--emerald)',`Model retrained to v${modelVersion.toFixed(1)}!`,'Just now');
+      showToast(`🔄 Model v${modelVersion.toFixed(1)} trained! Accuracy improved.`,'green');
+    }
+    bar.style.width = pct+'%';
+  },200);
+}
+
+function exportModelWeights(){
+  const data = `Model Weights Export\nVersion: v${modelVersion}\nTimestamp: ${new Date().toLocaleString()}\nPrecision: 92.3%\nRecall: 96.1%\nF1-Score: 94.1%\n\nNote: In production, this would be a binary .pt or .h5 file.`;
+  downloadFile(`model_weights_v${modelVersion}.txt`, data, 'text/plain');
+  showToast('📥 Weights exported!','blue');
+  addAuditEntry('Export',`Model weights v${modelVersion}`);
+}
+
+function applyThreshold(val){
+  showToast(`⚙️ Threshold set to ${val}. Recalculating…`,'cyan');
+}
+
+// ═══════════════════════════════════════════
+// REPORTS
+// ═══════════════════════════════════════════
+function exportReport(format){
+  const type = document.getElementById('reportType').value;
+  const from = document.getElementById('dateFrom').value;
+  const to = document.getElementById('dateTo').value;
+  addAuditEntry('Export', `Report: ${type} (${from} to ${to}) as ${format.toUpperCase()}`);
+  if(format === 'pdf') generatePDF(type, from, to);
+  else if(format === 'csv') generateCSV(type);
+  else if(format === 'xlsx') generateXLSX(type);
+}
+
+function generatePDF(type, from, to){
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF();
+  const now = new Date().toLocaleString();
+  // Header
+  doc.setFillColor(99,102,241);
+  doc.rect(0,0,220,28,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica','bold');
+  doc.text('Smart Vision AI — Admin Report', 14, 12);
+  doc.setFontSize(9);
+  doc.setFont('helvetica','normal');
+  doc.text(`Generated: ${now}`, 14, 20);
+  doc.text(`Period: ${from} to ${to}`, 14, 26);
+  // Body
+  doc.setTextColor(30,27,75);
+  doc.setFontSize(13);
+  doc.setFont('helvetica','bold');
+  doc.text(getReportTitle(type), 14, 40);
+  doc.setFontSize(10);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(71,85,105);
+  doc.text(`Report Type: ${type}`, 14, 48);
+  // KPIs
+  doc.setDrawColor(99,102,241);
+  doc.setLineWidth(0.5);
+  doc.line(14, 52, 196, 52);
+  doc.setFontSize(9);
+  doc.setTextColor(30,27,75);
+  const kpis = getReportData(type);
+  let y = 60;
+  kpis.forEach(k => {
+    doc.setFont('helvetica','bold');
+    doc.text(k.label+':', 14, y);
+    doc.setFont('helvetica','normal');
+    doc.text(k.value, 80, y);
+    y += 8;
+  });
+  // Students table if applicable
+  if(type==='student'||type==='daily'||type==='weekly'){
+    y += 6;
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(11);
+    doc.text('Student Summary', 14, y); y+=8;
+    doc.setFontSize(8);
+    const headers = ['Name','Email','Status','Scans','Accuracy'];
+    const colW = [40,55,25,20,20];
+    let x=14;
+    headers.forEach((h,i)=>{doc.setFont('helvetica','bold');doc.text(h,x,y);x+=colW[i];});
+    y+=2; doc.line(14,y,196,y); y+=4;
+    DB.students.slice(0,8).forEach(s=>{
+      x=14; doc.setFont('helvetica','normal');
+      [s.name,s.email,s.status,s.scans.toString(),s.accuracy+'%'].forEach((v,i)=>{doc.text(String(v).slice(0,18),x,y);x+=colW[i];});
+      y+=7; if(y>270){doc.addPage();y=20;}
+    });
+  }
+  if(type==='scan'){
+    y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(11);
+    doc.text('Scan History (Note: Images stored at static/uploads)', 14, y); y+=8;
+    doc.setFontSize(8);
+    DB.scans.forEach(s=>{
+      doc.setFont('helvetica','normal');
+      doc.text(`${s.date} | ${s.student} | ${s.material} | Result: ${s.result}`, 14, y); y+=7;
+      if(y>270){doc.addPage();y=20;}
+    });
+  }
+  // Footer
+  doc.setFontSize(7); doc.setTextColor(148,163,184);
+  doc.text('Smart Vision AI — Intelligent Reuse Advisor | Confidential', 14, 290);
+  doc.text(`Page 1 | ${now}`, 150, 290);
+  doc.save(`SmartVision_${type}_Report_${from}.pdf`);
+  showToast('📄 PDF downloaded!','green');
+}
+
+function getReportTitle(type){
+  const titles={student:'Student Activity Report',material:'Material Analytics Report',model:'Model Performance Report',system:'System Health Report',daily:'Daily Activity Summary',weekly:'Weekly Activity Summary',scan:'Scan Results Report'};
+  return titles[type]||'Report';
+}
+
+function getReportData(type){
+  const data={
+    student:[{label:'Total Students',value:'486'},{label:'Approved',value:'3'},{label:'Pending',value:'3'},{label:'Total Scans',value:'5,293'},{label:'Avg Accuracy',value:'94.5%'}],
+    material:[{label:'Total Materials',value:'2,847'},{label:'Usable',value:'1,842 (64.7%)'},{label:'Non-Usable',value:'1,005 (35.3%)'},{label:'Avg Confidence',value:'91.2%'}],
+    model:[{label:'Model Version',value:`v${modelVersion}`},{label:'Accuracy',value:'94.5%'},{label:'Precision',value:'92.3%'},{label:'Recall',value:'96.1%'},{label:'F1-Score',value:'94.1%'}],
+    system:[{label:'API Status',value:'Operational'},{label:'Database',value:'Connected'},{label:'Storage',value:'72% used'},{label:'Error Rate',value:'0.3%'},{label:'Avg Response',value:'1.2s'}],
+    daily:[{label:'New Signups',value:'12'},{label:'Scans Today',value:'847'},{label:'Active Sessions',value:'34'},{label:'Alerts',value:'7 unread'}],
+    weekly:[{label:'Total Scans',value:'5,293'},{label:'New Students',value:'12'},{label:'Materials Added',value:'342'},{label:'Model Accuracy',value:'94.5%'}],
+    scan:[{label:'Total Scans',value:'847'},{label:'Usable',value:'550 (64.9%)'},{label:'Review',value:'120 (14.2%)'},{label:'Non-Usable',value:'177 (20.9%)'}],
+  };
+  return data[type]||[];
+}
+
+function generateCSV(type){
+  let csv='';
+  if(type==='student'||type==='daily'||type==='weekly'){
+    csv='Name,Email,Status,Joined,Scans,Accuracy,Last Active\n';
+    csv+=DB.students.map(s=>`"${s.name}","${s.email}","${s.status}","${s.joined}",${s.scans},${s.accuracy},"${s.lastActive}"`).join('\n');
+  } else if(type==='material'){
+    csv='Material,Type,Status,Confidence,Date,SubmittedBy\n';
+    csv+=DB.detections.map(d=>`"${d.name}","${d.type}","${d.status}",${d.confidence},"${d.date}","${d.by}"`).join('\n');
+  } else {
+    csv='Metric,Value\n'+getReportData(type).map(r=>`"${r.label}","${r.value}"`).join('\n');
+  }
+  downloadFile(`SmartVision_${type}_${Date.now()}.csv`, csv, 'text/csv');
+  showToast('📊 CSV exported!','cyan');
+}
+
+function generateXLSX(type){
+  const wb = XLSX.utils.book_new();
+  let data;
+  if(type==='student'||type==='daily'||type==='weekly'){
+    data=[['Name','Email','Status','Joined','Scans','Accuracy','Last Active'],...DB.students.map(s=>[s.name,s.email,s.status,s.joined,s.scans,s.accuracy,s.lastActive])];
+  } else if(type==='material'){
+    data=[['Material','Type','Status','Confidence','Date','Submitted By'],...DB.detections.map(d=>[d.name,d.type,d.status,d.confidence,d.date,d.by])];
+  } else {
+    data=[['Metric','Value'],...getReportData(type).map(r=>[r.label,r.value])];
+  }
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, 'Report');
+  XLSX.writeFile(wb, `SmartVision_${type}_${Date.now()}.xlsx`);
+  showToast('📊 Excel exported!','cyan');
+}
+
+function exportInsightReport(type, format){
+  if(format==='pdf') generatePDF(type==='monthly'?'weekly':type==='accuracy'?'model':type, '2026-01-01', '2026-01-31');
+  else if(format==='csv') generateCSV('material');
+  else if(format==='xlsx') generateXLSX('material');
+}
+
+// ═══════════════════════════════════════════
+// FILE IMPORT
+// ═══════════════════════════════════════════
+function handleFileSelect(input){
+  if(input.files[0]) document.getElementById('importFileName').textContent = '📎 '+input.files[0].name;
+}
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) document.getElementById('importFileName').textContent = '📎 '+file.name;
+}
+function importData(){
+  const fname = document.getElementById('importFileName').textContent;
+  if(!fname){ showToast('⚠️ Select a file first!','amber'); return; }
+  showToast('📥 Importing data…','cyan');
+  setTimeout(()=>{ showToast('✅ Import complete! Data refreshed.','green'); addAuditEntry('Import','Bulk data import'); }, 1500);
+}
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function toggleSetting(btn, key){ btn.classList.toggle('on'); showToast(`⚙️ Setting updated.`,'cyan'); }
+function saveAdminProfile(){ showToast('✅ Profile saved!','green'); addAuditEntry('Edit','Admin profile'); }
+function saveSystemConfig(){ showToast('✅ Config updated!','green'); addAuditEntry('Edit','System configuration'); }
+
+// ═══════════════════════════════════════════
+// AI ASSISTANT — GROK API
+// ═══════════════════════════════════════════
+const GROK_API_KEY = window.API_CONFIG?.GROK_API_KEY || 'YOUR_GROK_API_KEY';
+const GROK_MODEL = 'grok-4.20-reasoning';
+
+const systemContext = `You are Grok, an AI admin copilot for Smart Vision AI — an intelligent material reuse and recycling platform. You help the admin with:
+- Platform stats: 486 students, 5293 scans, 94.5% model accuracy, 847 scans today, 34 active sessions
+- Alerts: 7 unread (2 critical - low confidence detections, 5 warnings)
+- Students: 3 pending approvals (Ananya Kumar, Rohan Verma, Mike Johnson)
+- Storage: 72% used (3.6GB/5GB)
+- Model: v2.2, last trained 7 days ago, Precision 92.3%, Recall 96.1%, F1 94.1%
+- Materials: 1842 usable (64.7%), 1005 non-usable (35.3%), 47 categories
+- Carbon reduction: 38% CO2 reduction this quarter
+- Top students: John Doe (124 scans, 96.2%), Sarah Williams (98 scans, 94.5%), Raj Mehta (87 scans, 93.1%)
+Be concise, actionable, and insightful. Format with bullet points when listing.`;
+
+async function sendAIMessage(){
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  input.value='';
+  const sendBtn = document.getElementById('aiSendBtn');
+  sendBtn.disabled=true;
+  appendAIMessage(msg,'user');
+  // Typing
+  const typingDiv = document.createElement('div');
+  typingDiv.className='ai-msg'; typingDiv.id='ai-typing';
+  typingDiv.innerHTML=`<div class="ai-bubble-icon ai-icon-ai"><i class="fas fa-robot"></i></div><div class="ai-bubble ai-bubble-ai"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('aiMessages').appendChild(typingDiv);
+  scrollAI();
+  try {
+    const res = await fetch('https://api.x.ai/v1/chat/completions', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${GROK_API_KEY}`},
+      body: JSON.stringify({
+        model: 'grok-3-mini',
+        messages:[{role:'system',content:systemContext},{role:'user',content:msg}],
+        max_tokens:600,
+        temperature:0.7
+      })
+    });
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const errorMsg = errorData.error?.message || `HTTP ${res.status}: ${res.statusText}`;
+      throw new Error(`API Error: ${errorMsg}`);
+    }
+    
+    const data = await res.json();
+    typingDiv.remove();
+    
+    if(data.choices && data.choices[0]){
+      appendAIMessage(data.choices[0].message.content,'ai');
+    } else {
+      appendAIMessage('⚠️ No response from Grok API. Please try again.','ai');
+    }
+  } catch(err) {
+    typingDiv.remove();
+    console.error('Grok API Error:', err);
+    
+    // Check for specific error types
+    if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+      appendAIMessage('🔑 API authentication error. Please check the Grok API key.','ai');
+    } else if (err.message.includes('429') || err.message.includes('rate limit')) {
+      appendAIMessage('⏱️ Rate limit exceeded. Please wait a moment and try again.','ai');
+    } else if (err.message.includes('403') || err.message.includes('Forbidden')) {
+      appendAIMessage('🚫 API access forbidden. Please check your API permissions.','ai');
+    } else if (err.message.includes('network') || err.message.includes('fetch')) {
+      appendAIMessage('🌐 Network error. Please check your internet connection.','ai');
+    } else {
+      // Fallback to local responses if API fails
+      appendAIMessage(getLocalAIResponse(msg),'ai');
+    }
+  }
+  sendBtn.disabled=false;
+}
+
+function getLocalAIResponse(msg){
+  const lower=msg.toLowerCase();
+  if(lower.includes('summarize')||lower.includes('alert')) return "📊 **Today's Summary:**\n\n• 847 scans processed, 12 new signups\n• 2 critical alerts: low-confidence detections (62%) need review\n• 3 student registrations pending approval\n• Model accuracy steady at 94.5%\n• Storage at 72% — monitor this\n• 34 active sessions right now";
+  if(lower.includes('model')||lower.includes('accuracy')) return "🎯 **Model Analysis:**\n\n• Current: v2.2, accuracy 94.5%\n• Last trained 7 days ago — **recommend retraining**\n• Weak spot: Plastic materials avg 71% confidence\n• Action: Add 200+ plastic training samples\n• Precision: 92.3% | Recall: 96.1% | F1: 94.1%";
+  if(lower.includes('report')) return "📄 **Weekly Report Draft:**\n\n**Smart Vision AI — Week Summary**\n• Total scans: 5,293 (↑15%)\n• Model retrained → v2.2, accuracy 94.5%\n• 342 materials bulk-imported\n• 12 new registrations, 9 approved\n• 38% CO₂ reduction this quarter\n\n**Action items:** Approve 3 students, review 2 low-confidence detections";
+  if(lower.includes('student')||lower.includes('top')) return "🏆 **Top Students:**\n\n1. John Doe — 124 scans, 96.2% accuracy\n2. Sarah Williams — 98 scans, 94.5% accuracy\n3. Raj Mehta — 87 scans, 93.1% accuracy\n\n⚠️ 3 pending: Ananya Kumar, Rohan Verma, Mike Johnson — approve from Students > Approvals tab";
+  if(lower.includes('storage')) return "💾 **Storage Report:**\n\nCurrently at 72% (3.6GB/5GB)\n\n**Recommendations:**\n• Archive scan images >90 days → ~400MB savings\n• Compress old reports → ~200MB\n• Clear failed upload logs → ~150MB\n• Upgrade plan if growth >8.5%/month continues";
+  return "I'm your Grok-powered admin copilot! Try asking:\n• 'Summarize today's alerts'\n• 'What's wrong with model accuracy?'\n• 'Draft a weekly report'\n• 'Top performing students'\n• 'Storage optimization tips'";
+}
+
+function sendAIPromptQP(el){
+  document.getElementById('aiInput').value = el.textContent;
+  sendAIMessage();
+}
+
+function appendAIMessage(text, role){
+  const wrap = document.getElementById('aiMessages');
+  const div = document.createElement('div');
+  div.className = `ai-msg${role==='user'?' user':''}`;
+  const formatted = text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  div.innerHTML = role === 'ai'
+    ? `<div class="ai-bubble-icon ai-icon-ai"><i class="fas fa-robot"></i></div><div class="ai-bubble ai-bubble-ai">${formatted}</div>`
+    : `<div class="ai-bubble ai-bubble-user">${text}</div><div class="ai-bubble-icon ai-icon-user"><i class="fas fa-user"></i></div>`;
+  wrap.appendChild(div);
+  scrollAI();
+}
+
+function scrollAI(){ const w=document.getElementById('aiMessages'); w.scrollTop=w.scrollHeight; }
+
+// ═══════════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════════
+let charts = {};
+function getCC(){
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {grid:isDark?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)', text:isDark?'#94a3b8':'#475569'};
+}
+function destroyChart(id){ if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+function initAllCharts(){
+  initScanTrendsChart(); initDonutChart(); initAnalyticsChart();
+  initAccuracyChart(); initModelChart(); initMaterialTrendsChart();
+  initDistChart(); initMatAccChart();
+}
+
+function initScanTrendsChart(){
+  const ctx=document.getElementById('scanTrendsChart'); if(!ctx) return;
+  destroyChart('scanTrends');
+  const {grid,text}=getCC();
+  charts.scanTrends=new Chart(ctx,{type:'line',data:{labels:['Jan 9','Jan 10','Jan 11','Jan 12','Jan 13','Jan 14','Jan 15'],datasets:[
+    {label:'Total Scans',data:[420,580,490,710,650,320,847],borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,0.08)',borderWidth:2.5,fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:'#6366f1'},
+    {label:'Usable',data:[280,390,320,470,430,210,550],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.05)',borderWidth:2,fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#10b981'},
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:text,usePointStyle:true}},tooltip:{backgroundColor:'rgba(10,15,30,0.9)',titleColor:'#f1f5f9',bodyColor:'#94a3b8'}},scales:{x:{grid:{color:grid},ticks:{color:text}},y:{grid:{color:grid},ticks:{color:text},beginAtZero:true}}}});
+}
+
+function initDonutChart(){
+  const ctx=document.getElementById('donutChart'); if(!ctx) return;
+  destroyChart('donut');
+  charts.donut=new Chart(ctx,{type:'doughnut',data:{labels:['Usable','Non-Usable'],datasets:[{data:[1842,1005],backgroundColor:['#10b981','#ef4444'],borderWidth:0,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'72%'}});
+}
+
+function initAnalyticsChart(){
+  const ctx=document.getElementById('analyticsChart'); if(!ctx) return;
+  destroyChart('analytics');
+  const {grid,text}=getCC();
+  charts.analytics=new Chart(ctx,{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[
+    {label:'Scans',data:[420,580,490,710,650,320,280],backgroundColor:'rgba(99,102,241,0.7)',borderRadius:6},
+    {label:'Accurate',data:[390,545,460,672,610,295,260],backgroundColor:'rgba(16,185,129,0.6)',borderRadius:6},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:text,usePointStyle:true}}},scales:{x:{grid:{display:false},ticks:{color:text}},y:{grid:{color:grid},ticks:{color:text},beginAtZero:true}}}});
+}
+
+function initAccuracyChart(){
+  const ctx=document.getElementById('accuracyChart'); if(!ctx) return;
+  destroyChart('accuracy');
+  const {grid,text}=getCC();
+  charts.accuracy=new Chart(ctx,{type:'bar',data:{labels:['Metal','Concrete','Plastic','Aluminum','Iron','Organic','Glass'],datasets:[{label:'Accuracy %',data:[99.4,96.2,72.1,94.3,97.8,88.5,91.2],backgroundColor:['#6366f1','#06b6d4','#f59e0b','#10b981','#a855f7','#f43f5e','#3b82f6'],borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:grid},ticks:{color:text},min:60,max:100},y:{grid:{display:false},ticks:{color:text}}}}});
+}
+
+function initModelChart(){
+  const ctx=document.getElementById('modelChart'); if(!ctx) return;
+  destroyChart('model');
+  const {grid,text}=getCC();
+  charts.model=new Chart(ctx,{type:'line',data:{labels:['v1.0','v1.5','v2.0','v2.1','v2.2'],datasets:[
+    {label:'Precision',data:[86.1,89.3,91.2,92.1,92.3],borderColor:'#6366f1',fill:false,tension:0.4,borderWidth:2.5},
+    {label:'Recall',data:[83.5,88.1,93.2,95.4,96.1],borderColor:'#10b981',fill:false,tension:0.4,borderWidth:2.5},
+    {label:'Accuracy',data:[85.2,88.7,92.1,93.1,94.5],borderColor:'#f59e0b',fill:false,tension:0.4,borderWidth:2.5},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:text,usePointStyle:true}}},scales:{x:{grid:{color:grid},ticks:{color:text}},y:{grid:{color:grid},ticks:{color:text},min:80,max:100}}}});
+}
+
+function initMaterialTrendsChart(){
+  const ctx=document.getElementById('materialTrendsChart'); if(!ctx) return;
+  destroyChart('matTrends');
+  const {grid,text}=getCC();
+  charts.matTrends=new Chart(ctx,{type:'line',data:{labels:['Aug','Sep','Oct','Nov','Dec','Jan'],datasets:[
+    {label:'Metal',data:[320,380,420,390,460,510],borderColor:'#6366f1',tension:0.4,borderWidth:2,fill:false},
+    {label:'Plastic',data:[180,210,190,220,250,290],borderColor:'#f59e0b',tension:0.4,borderWidth:2,fill:false},
+    {label:'Concrete',data:[240,260,280,300,320,350],borderColor:'#10b981',tension:0.4,borderWidth:2,fill:false},
+    {label:'Aluminum',data:[120,140,130,160,180,200],borderColor:'#a855f7',tension:0.4,borderWidth:2,fill:false},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:text,usePointStyle:true}}},scales:{x:{grid:{color:grid},ticks:{color:text}},y:{grid:{color:grid},ticks:{color:text},beginAtZero:true}}}});
+}
+
+function initDistChart(){
+  const ctx=document.getElementById('distChart'); if(!ctx) return;
+  destroyChart('dist');
+  charts.dist=new Chart(ctx,{type:'doughnut',data:{labels:['Metal','Plastic','Concrete','Aluminum','Iron','Others'],datasets:[{data:[35,22,18,12,8,5],backgroundColor:['#6366f1','#f59e0b','#10b981','#a855f7','#06b6d4','#f43f5e'],borderWidth:0,hoverOffset:10}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:getCC().text,usePointStyle:true}}},cutout:'60%'}});
+}
+
+function initMatAccChart(){
+  const ctx=document.getElementById('matAccChart'); if(!ctx) return;
+  destroyChart('matAcc');
+  const {grid,text}=getCC();
+  charts.matAcc=new Chart(ctx,{type:'bar',data:{labels:['Metal','Concrete','Aluminum','Iron','Glass','Organic','Composite','Rubber','Plastic'],datasets:[{label:'Accuracy %',data:[99.4,96.2,94.3,97.8,91.2,88.5,83.2,79.6,72.1],backgroundColor:function(ctx){const v=ctx.raw;return v>90?'rgba(16,185,129,0.7)':v>80?'rgba(245,158,11,0.7)':'rgba(239,68,68,0.7)'},borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:text}},y:{grid:{color:grid},ticks:{color:text},min:60,max:100}}}});
+}
+
+function updateChartRange(range, btn){
+  document.querySelectorAll('[onclick*="updateChartRange"]').forEach(b=>b.classList.remove('btn-primary'));
+  btn.classList.add('btn-primary');
+  const data={
+    week:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],d1:[420,580,490,710,650,320,847],d2:[280,390,320,470,430,210,550]},
+    month:{labels:['W1','W2','W3','W4'],d1:[2800,3200,2900,4100],d2:[1820,2080,1890,2670]},
+    year:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],d1:[1200,1450,1380,1600,1750,2100,2300,2180,2400,2650,2900,3100],d2:[780,945,897,1040,1138,1365,1495,1417,1560,1723,1885,2015]}
+  };
+  const d=data[range];
+  if(charts.scanTrends){charts.scanTrends.data.labels=d.labels;charts.scanTrends.data.datasets[0].data=d.d1;charts.scanTrends.data.datasets[1].data=d.d2;charts.scanTrends.update();}
+}
+
+// ═══════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════
+function downloadFile(name, content, type){
+  const a=document.createElement('a');
+  const blob=new Blob([content],{type});
+  a.href=URL.createObjectURL(blob); a.download=name; a.click();
+}
+
+let toastTimeout;
+function showToast(msg, type='green'){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);t.style.cssText='position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:12px;font-size:0.85rem;font-weight:600;z-index:9999;transition:all 0.3s;transform:translateY(20px);opacity:0;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,0.3)';}
+  const colors={'green':'rgba(16,185,129,0.9)','red':'rgba(239,68,68,0.9)','amber':'rgba(245,158,11,0.9)','blue':'rgba(99,102,241,0.9)','cyan':'rgba(6,182,212,0.9)'};
+  t.style.background=colors[type]||colors.green; t.style.color='#fff'; t.textContent=msg;
+  t.style.transform='translateY(0)'; t.style.opacity='1';
+  clearTimeout(toastTimeout); toastTimeout=setTimeout(()=>{t.style.transform='translateY(20px)';t.style.opacity='0';},3000);
+}
+
+function addNotification(icon, color, icolor, title, time){
+  DB.notifications.unshift({id:Date.now(),icon,color,icolor,title,time,read:false});
+  renderNotifications();
+}
+
+function globalSearchFn(val){
+  if(!val) return;
+  // Simple search indicator
+  console.log('Searching:', val);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(initAllCharts, 200);
+  renderStudents();
+  renderNotifications();
+  renderAuditLog();
+  renderErrors();
+  renderDetections();
+  renderAnalyticsStudents();
+  document.getElementById('sData').style.display='block';
+  // Auto-refresh alerts count every 30s
+  setInterval(()=>{
+    const unread=DB.alerts.filter(a=>!a.read).length;
+    document.getElementById('alertBadge').textContent=unread;
+    document.getElementById('overviewAlerts').textContent=unread;
+  },30000);
+});
+</script>
+</body>
+</html>

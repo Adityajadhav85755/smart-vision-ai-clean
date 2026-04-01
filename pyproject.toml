@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smart-vision-ai"
+version = "1.0.0"
+description = "Smart Vision AI Application"
+requires-python = ">=3.14"
+dependencies = [
+    "flask==3.0.3",
+    "gunicorn==21.2.0", 
+    "numpy==1.26.4",
+    "opencv-python==4.10.0.84",
+    "pillow==10.4.0",
+    "pyyaml==6.0.1",
+    "ultralytics==8.3.0",
+    "torch==2.11.0",
+    "torchvision==0.26.0",
+    "google-generativeai==0.8.3"
+]
+
+[tool.setuptools]
+packages = ["."]

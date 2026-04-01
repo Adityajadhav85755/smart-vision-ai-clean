@@ -1,0 +1,14 @@
+node_modules/
+__pycache__/
+*.pyc
+*.pt
+*.h5
+.env
+kaggle.json
+static/uploads/
+data/sessions.json
+data/users.json
+config.py
+.vercel
+*.h5
+static/js/config.js 

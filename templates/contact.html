@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support — Smart Vision AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #050810;
+            --surface: #0c1120;
+            --surface2: #111827;
+            --border: rgba(255,255,255,0.07);
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --cyan: #06b6d4;
+            --purple: #a855f7;
+            --pink: #f43f5e;
+            --green: #10b981;
+            --text: #f1f5f9;
+            --muted: #64748b;
+            --muted2: #94a3b8;
+            --fd: 'Syne', sans-serif;
+            --fb: 'DM Sans', sans-serif;
+        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: var(--fb); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+        }
+        .blob { position: fixed; border-radius: 50%; filter: blur(130px); opacity: 0.1; pointer-events: none; animation: drift 18s ease-in-out infinite alternate; }
+        .b1 { width: 600px; height: 600px; background: var(--primary); top: -200px; left: -200px; }
+        .b2 { width: 450px; height: 450px; background: var(--cyan); bottom: 5%; right: -150px; animation-delay: -7s; }
+        .b3 { width: 300px; height: 300px; background: var(--purple); top: 50%; left: 35%; animation-delay: -13s; opacity: 0.07; }
+        @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 48px;
+            background: rgba(5,8,16,0.65); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); transition: padding 0.3s;
+        }
+        .nav-brand { font-family: var(--fd); font-weight: 800; font-size: 1.2rem; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .nav-brand i { color: var(--primary); }
+        .nav-links { display: flex; gap: 32px; list-style: none; }
+        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.03em; transition: color 0.2s; position: relative; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-links a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px; background: var(--primary); border-radius: 2px; }
+        .btn-nav { padding: 9px 22px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--fb); font-size: 0.875rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+        .btn-nav:hover { border-color: var(--primary); background: rgba(99,102,241,0.06); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+        /* LAYOUT */
+        .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+        /* HERO */
+        .hero { padding: 160px 24px 72px; text-align: center; }
+        .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); padding: 6px 16px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary-light); margin-bottom: 28px; animation: fu 0.8s ease both; }
+        h1.ht { font-family: var(--fd); font-size: clamp(2.8rem,7vw,5.5rem); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; animation: fu 0.8s 0.1s ease both; }
+        .gt { background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-sub { max-width: 520px; margin: 20px auto 0; color: var(--muted2); font-size: 1.05rem; font-weight: 300; animation: fu 0.8s 0.2s ease both; }
+        @keyframes fu { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+
+        /* REVEAL */
+        .rv { opacity:0; transform:translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .rv.vs { opacity:1; transform:translateY(0); }
+        .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s}
+
+        /* SECTION LABELS */
+        .slabel { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; }
+        .stitle { font-family: var(--fd); font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+
+        /* MAP CARD */
+        .map-card { background: rgba(12,17,32,0.88); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; backdrop-filter: blur(16px); box-shadow: 0 32px 80px rgba(0,0,0,0.4); margin-bottom: 80px; }
+        .map-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 32px; background: rgba(17,24,39,0.7); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 14px; }
+        .map-title-g { display: flex; align-items: center; gap: 14px; }
+        .map-ico { width: 44px; height: 44px; border-radius: 12px; background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.1rem; flex-shrink: 0; }
+        .map-title-g h3 { font-family: var(--fd); font-size: 1.05rem; font-weight: 700; }
+        .map-title-g p { font-size: 0.8rem; color: var(--muted2); margin-top: 2px; }
+        .map-ctrls { display: flex; gap: 10px; }
+        .mbtn { display: flex; align-items: center; gap: 7px; padding: 9px 16px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 9px; color: var(--muted2); font-family: var(--fb); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .mbtn:hover { border-color: var(--primary); color: var(--text); background: rgba(99,102,241,0.08); }
+        .map-frame { width: 100%; height: 340px; position: relative; overflow: hidden; }
+        .map-frame iframe { width: 100%; height: 100%; border: none; display: block; }
+        .map-locs { display: grid; grid-template-columns: repeat(4,1fr); border-top: 1px solid var(--border); }
+        .loc { display: flex; align-items: center; gap: 12px; padding: 18px 22px; cursor: pointer; transition: background 0.2s; border-right: 1px solid var(--border); position: relative; }
+        .loc:last-child { border-right: none; }
+        .loc:hover { background: rgba(99,102,241,0.06); }
+        .loc.on { background: rgba(99,102,241,0.12); }
+        .loc.on::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--primary); }
+        .ldot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex-shrink:0; transition: background 0.2s; }
+        .loc.on .ldot { background: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.25); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(1.4)} }
+        .linfo h4 { font-size: 0.875rem; font-weight: 600; }
+        .linfo p { font-size: 0.75rem; color: var(--muted2); margin-top: 2px; }
+
+        /* CONTACT GRID */
+        .cgrid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; margin-bottom: 80px; }
+
+        /* FORM */
+        .form-card { background: rgba(12,17,32,0.88); border: 1px solid var(--border); border-radius: 24px; padding: 48px; backdrop-filter: blur(16px); }
+        .form-card h2 { font-family: var(--fd); font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; }
+        .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .fg { margin-bottom: 20px; }
+        .fg label { display: block; margin-bottom: 8px; font-size: 0.78rem; font-weight: 600; color: var(--muted2); letter-spacing: 0.05em; text-transform: uppercase; }
+        .fc { width: 100%; background: rgba(5,8,16,0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 13px 16px; color: var(--text); font-family: var(--fb); font-size: 0.9rem; transition: border-color 0.2s, background 0.2s; appearance: none; }
+        .fc::placeholder { color: var(--muted); }
+        .fc:focus { outline: none; border-color: var(--primary); background: rgba(99,102,241,0.04); }
+        textarea.fc { resize: vertical; min-height: 120px; }
+        .bsub { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%); border: none; border-radius: 12px; color: white; font-family: var(--fd); font-size: 0.95rem; font-weight: 700; cursor: pointer; letter-spacing: 0.02em; transition: opacity 0.2s, transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 9px; }
+        .bsub:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* INFO */
+        .istack { display: flex; flex-direction: column; gap: 16px; }
+        .icard { background: rgba(12,17,32,0.88); border: 1px solid var(--border); border-radius: 18px; padding: 24px 28px; display: flex; align-items: flex-start; gap: 18px; backdrop-filter: blur(16px); transition: border-color 0.25s; }
+        .icard:hover { border-color: rgba(99,102,241,0.3); }
+        .iico { width: 48px; height: 48px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; flex-shrink: 0; }
+        .ii { background: linear-gradient(135deg, var(--primary), #7c3aed); }
+        .ic { background: linear-gradient(135deg, var(--cyan), #3b82f6); }
+        .ig { background: linear-gradient(135deg, var(--green), #059669); }
+        .icard h3 { font-family: var(--fd); font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+        .icard p { font-size: 0.85rem; color: var(--muted2); line-height: 1.6; }
+        .icard a { color: var(--muted2); text-decoration: none; transition: color 0.2s; display: block; font-size: 0.85rem; line-height: 1.7; }
+        .icard a:hover { color: var(--primary-light); }
+        .rtag { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); border-radius: 16px; padding: 20px 24px; display: flex; align-items: center; gap: 14px; }
+        .rping { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(16,185,129,0.2); flex-shrink:0; animation: pulse 2s infinite; }
+
+        /* FAQ */
+        .faq-wrap { padding-bottom: 100px; }
+        .faq-hd { text-align: center; margin-bottom: 48px; }
+        .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .fitem { background: rgba(12,17,32,0.88); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; backdrop-filter: blur(12px); transition: border-color 0.25s; }
+        .fitem:hover { border-color: rgba(99,102,241,0.25); }
+        .fitem.open { border-color: rgba(99,102,241,0.4); }
+        .fq { width: 100%; padding: 22px 28px; background: none; border: none; color: var(--text); font-family: var(--fb); font-size: 0.95rem; font-weight: 600; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 16px; transition: color 0.2s; }
+        .fq:hover { color: var(--primary-light); }
+        .fqico { width: 28px; height: 28px; flex-shrink:0; border-radius: 7px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--primary); transition: transform 0.3s, background 0.3s; }
+        .fitem.open .fqico { transform: rotate(45deg); background: rgba(99,102,241,0.2); }
+        .fa { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s ease; padding: 0 28px; color: var(--muted2); font-size: 0.9rem; font-weight: 300; line-height: 1.75; }
+        .fitem.open .fa { max-height: 300px; padding: 0 28px 24px; }
+
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border); padding: 64px 0 32px; }
+        .fgrid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 52px; }
+        .fbrand p { color: var(--muted); font-size: 0.875rem; margin-top: 16px; max-width: 270px; font-weight: 300; line-height: 1.7; }
+        .fcol h4 { font-family: var(--fd); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+        .fcol ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .fcol a { color: var(--muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+        .fcol a:hover { color: var(--text); }
+        .sicons { display: flex; gap: 10px; }
+        .si { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 0.875rem; transition: border-color 0.2s, color 0.2s; }
+        .si:hover { border-color: var(--primary); color: var(--primary); }
+        .fbot { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .fbot p { color: var(--muted); font-size: 0.8rem; }
+
+        /* TOAST */
+        .toast { position: fixed; bottom: 32px; right: 32px; z-index: 999; background: rgba(12,17,32,0.95); border: 1px solid rgba(99,102,241,0.4); border-radius: 14px; padding: 16px 24px; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(20px); transform: translateY(80px); opacity: 0; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast i { color: var(--green); }
+        .toast span { font-size: 0.9rem; font-weight: 500; }
+
+        /* RESPONSIVE */
+        @media (max-width: 960px) {
+            .cgrid { grid-template-columns: 1fr; }
+            .map-locs { grid-template-columns: repeat(2,1fr); }
+            .loc:nth-child(2) { border-right: none; }
+            .loc:nth-child(3) { border-top: 1px solid var(--border); border-right: 1px solid var(--border); }
+            .loc:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+        }
+        @media (max-width: 768px) {
+            nav { padding: 16px 20px; }
+            .nav-links, .btn-nav { display: none; }
+            .hamburger { display: flex; }
+            .nav-links.open { display: flex; flex-direction: column; position: fixed; inset: 68px 0 0 0; background: rgba(5,8,16,0.98); backdrop-filter: blur(20px); align-items: center; justify-content: center; gap: 28px; z-index: 99; }
+            .nav-links.open a { font-size: 1.2rem; }
+            .form-card { padding: 28px 22px; }
+            .frow { grid-template-columns: 1fr; }
+            .map-frame { height: 240px; }
+            .map-header { padding: 18px 20px; }
+            .fgrid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 520px) {
+            .fgrid { grid-template-columns: 1fr; }
+            .map-locs { grid-template-columns: 1fr; }
+            .loc { border-right: none !important; border-top: none !important; border-bottom: 1px solid var(--border); }
+            .loc:last-child { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+
+    <nav id="nav">
+        <a href="/" class="nav-brand"><i class="fas fa-brain"></i> Smart Vision AI</a>
+        <ul class="nav-links" id="nl">
+            <li><a href="/">Home</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/detection">AI Engine</a></li>
+            <li><a href="/about">Platform</a></li>
+            <li><a href="/contact" class="active">Support</a></li>
+        </ul>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <a href="/login_page" class="btn-nav">Login</a>
+            <div class="hamburger" id="hb" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-tag"><i class="fas fa-headset" style="font-size:0.65rem"></i>&nbsp; Global Support</div>
+        <h1 class="ht">We're Here<br>to <span class="gt">Help You</span></h1>
+        <p class="hero-sub">Our engineering and sustainability teams are ready to accelerate your circular economy transition.</p>
+    </section>
+
+    <div class="wrap">
+
+        <!-- MAP -->
+        <section style="padding-bottom:80px;">
+            <p class="slabel rv">Find us</p>
+            <h2 class="stitle rv d1" style="margin-bottom:36px;">Global Operations</h2>
+            <div class="map-card rv d2">
+                <div class="map-header">
+                    <div class="map-title-g">
+                        <div class="map-ico"><i class="fas fa-map-marked-alt"></i></div>
+                        <div>
+                            <h3>Mumbai, Maharashtra</h3>
+                            <p>Lalbaug, SWERI — Innovation &amp; Operations Center</p>
+                        </div>
+                    </div>
+                    <div class="map-ctrls">
+                        <button class="mbtn" onclick="centerMap()"><i class="fas fa-crosshairs"></i> Overview</button>
+                        <button class="mbtn" onclick="toggleFullscreen()"><i class="fas fa-expand"></i> Fullscreen</button>
+                    </div>
+                </div>
+                <div class="map-frame" id="mapFrame">
+                    <!-- iframe loads here -->
+                </div>
+                <div class="map-locs">
+                    <div class="loc on" id="l0" onclick="focusLoc(0)">
+                        <div class="ldot"></div>
+                        <div class="linfo"><h4>Lalbaug, SWERI</h4><p>Main Operations</p></div>
+                    </div>
+                    <div class="loc" id="l1" onclick="focusLoc(1)">
+                        <div class="ldot"></div>
+                        <div class="linfo"><h4>Lalbaug Cha Raja</h4><p>Landmark</p></div>
+                    </div>
+                    <div class="loc" id="l2" onclick="focusLoc(2)">
+                        <div class="ldot"></div>
+                        <div class="linfo"><h4>Mumbai Central</h4><p>Business District</p></div>
+                    </div>
+                    <div class="loc" id="l3" onclick="focusLoc(3)">
+                        <div class="ldot"></div>
+                        <div class="linfo"><h4>Maharashtra HQ</h4><p>Regional Office</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT GRID -->
+        <div class="cgrid">
+            <div class="form-card rv">
+                <h2>Technical Inquiry</h2>
+                <form id="cf">
+                    <div class="frow">
+                        <div class="fg"><label>Full Name</label><input type="text" class="fc" placeholder="John Doe" required></div>
+                        <div class="fg"><label>Email Address</label><input type="email" class="fc" placeholder="john@enterprise.com" required></div>
+                    </div>
+                    <div class="fg">
+                        <label>Subject</label>
+                        <select class="fc">
+                            <option>API Integration Support</option>
+                            <option>Model Retraining Request</option>
+                            <option>Enterprise License Inquiry</option>
+                            <option>General Support</option>
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label>Message</label>
+                        <textarea class="fc" placeholder="Describe your technical requirements…" required></textarea>
+                    </div>
+                    <button type="submit" class="bsub"><i class="fas fa-paper-plane"></i> Initialize Request</button>
+                </form>
+            </div>
+
+            <div class="istack rv d1">
+                <div class="icard">
+                    <div class="iico ii"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <h3>Neural Support</h3>
+                        <a href="mailto:support@smartvisionai.com">support@smartvisionai.com</a>
+                        <a href="mailto:jadhavaditya259@gmail.com">jadhavaditya259@gmail.com</a>
+                    </div>
+                </div>
+                <div class="icard">
+                    <div class="iico ic"><i class="fas fa-phone"></i></div>
+                    <div>
+                        <h3>Global Hotline</h3>
+                        <a href="tel:+919136239963">+91 91362 39963</a>
+                        <p style="margin-top:6px;font-size:0.8rem;">Mon–Fri, 9AM–6PM IST</p>
+                    </div>
+                </div>
+                <div class="icard">
+                    <div class="iico ig"><i class="fas fa-location-dot"></i></div>
+                    <div>
+                        <h3>HQ Operations</h3>
+                        <p>Lalbaug, SWERI<br>Mumbai, Maharashtra 400097</p>
+                    </div>
+                </div>
+                <div class="rtag">
+                    <div class="rping"></div>
+                    <div>
+                        <p style="font-size:.875rem;font-weight:600;color:var(--text)">Avg. Response Time</p>
+                        <p style="font-size:.8rem;color:var(--muted2)">Under 2 hours on business days</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-wrap rv">
+            <div class="faq-hd">
+                <p class="slabel">Knowledge base</p>
+                <h2 class="stitle">Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-list">
+                <div class="fitem">
+                    <button class="fq" onclick="toggleFaq(this)">
+                        How precise is the material segmentation?
+                        <span class="fqico"><i class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="fa">Our production models achieve a Mean Average Precision (mAP) of 99.2% across 15+ industrial material categories, validated on live conveyor belt streams under variable lighting.</div>
+                </div>
+                <div class="fitem">
+                    <button class="fq" onclick="toggleFaq(this)">
+                        Can the platform handle multi-spectral data?
+                        <span class="fqico"><i class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="fa">Yes — our ingestion engine supports RGB, Infrared, and Hyperspectral imaging for specialized industrial sorting applications requiring deeper material discrimination.</div>
+                </div>
+                <div class="fitem">
+                    <button class="fq" onclick="toggleFaq(this)">
+                        Is there an edge-computing SDK available?
+                        <span class="fqico"><i class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="fa">We provide optimized runtimes for NVIDIA Jetson, Coral TPU, and standard mobile chipsets for real-time edge classification without cloud dependency.</div>
+                </div>
+                <div class="fitem">
+                    <button class="fq" onclick="toggleFaq(this)">
+                        How do enterprise licenses work?
+                        <span class="fqico"><i class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="fa">Enterprise licenses are scoped by throughput volume and deployment nodes. Reach out via the form above — we'll schedule a technical scoping call within 24 hours.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="wrap">
+            <div class="fgrid">
+                <div class="fbrand">
+                    <a href="/" class="nav-brand"><i class="fas fa-brain"></i> Smart Vision AI</a>
+                    <p>Leading the transition to a circular economy through advanced material recognition and AI-powered sustainability tools.</p>
+                </div>
+                <div class="fcol">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="/detection">AI Engine</a></li>
+                        <li><a href="/features">Features</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="fcol">
+                    <h4>Connect</h4>
+                    <div class="sicons">
+                        <a href="https://x.com/elonm6025" target="_blank" class="si"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/in/aditya-jadhav-663951281" target="_blank" class="si"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/Adityajadhav85755" target="_blank" class="si"><i class="fab fa-github"></i></a>
+                        <a href="https://www.instagram.com/adii4_8/?hl=en" target="_blank" class="si"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Request sent! We'll respond within 2 hours.</span>
+    </div>
+
+    <script>
+        // NAV
+        function toggleMenu() { document.getElementById('nl').classList.toggle('open'); }
+        window.addEventListener('scroll', () => {
+            document.getElementById('nav').style.padding = window.scrollY > 60 ? '12px 48px' : '20px 48px';
+        });
+
+        // REVEAL
+        const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){e.target.classList.add('vs');obs.unobserve(e.target);} }), {threshold:0.12});
+        document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+        // MAP — OpenStreetMap embed (no API key needed)
+        const locs = [
+            { lat: 19.0220, lng: 72.8585 },
+            { lat: 19.0208, lng: 72.8579 },
+            { lat: 19.0760, lng: 72.8777 },
+            { lat: 18.9647, lng: 72.8256 }
+        ];
+
+        function buildMap(lat, lng, margin) {
+            const m = margin || 0.009;
+            return `https://www.openstreetmap.org/export/embed.html?bbox=${lng-m},${lat-m},${lng+m},${lat+m}&layer=mapnik&marker=${lat},${lng}`;
+        }
+
+        function setMapSrc(src) {
+            document.getElementById('mapFrame').innerHTML =
+                `<iframe src="${src}" width="100%" height="100%" frameborder="0" scrolling="no" loading="lazy" title="Smart Vision AI Location"></iframe>`;
+        }
+
+        function focusLoc(i) {
+            setMapSrc(buildMap(locs[i].lat, locs[i].lng));
+            document.querySelectorAll('.loc').forEach((el,j) => el.classList.toggle('on', i===j));
+        }
+
+        function centerMap() {
+            setMapSrc('https://www.openstreetmap.org/export/embed.html?bbox=72.80,18.95,72.90,19.10&layer=mapnik');
+            document.querySelectorAll('.loc').forEach(el => el.classList.remove('on'));
+        }
+
+        function toggleFullscreen() {
+            const el = document.getElementById('mapFrame');
+            if (!document.fullscreenElement) el.requestFullscreen().catch(()=>{});
+            else document.exitFullscreen();
+        }
+
+        // Load default map
+        window.addEventListener('load', () => focusLoc(0));
+
+        // FORM
+        document.getElementById('cf').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 4200);
+            this.reset();
+        });
+
+        // FAQ
+        function toggleFaq(btn) {
+            const item = btn.closest('.fitem');
+            const open = item.classList.contains('open');
+            document.querySelectorAll('.fitem.open').forEach(el => el.classList.remove('open'));
+            if (!open) item.classList.add('open');
+        }
+    </script>
+</body>
+</html>

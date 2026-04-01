@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us — Smart Vision AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #050810;
+            --surface: #0c1120;
+            --surface2: #111827;
+            --border: rgba(255,255,255,0.07);
+            --primary: #00e5ff;
+            --secondary: #7c3aed;
+            --accent: #f0abfc;
+            --text: #f1f5f9;
+            --muted: #64748b;
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ── NOISE TEXTURE OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 0;
+        }
+
+        /* ── AMBIENT GLOW BLOBS ── */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+            animation: drift 18s ease-in-out infinite alternate;
+        }
+        .blob-1 { width: 600px; height: 600px; background: var(--secondary); top: -200px; left: -200px; }
+        .blob-2 { width: 500px; height: 500px; background: var(--primary); bottom: 10%; right: -150px; animation-delay: -6s; }
+        .blob-3 { width: 300px; height: 300px; background: var(--accent); top: 50%; left: 40%; animation-delay: -12s; opacity: 0.07; }
+
+        @keyframes drift {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(40px, 30px) scale(1.08); }
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 40px;
+            background: rgba(5, 8, 16, 0.6);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.3s;
+        }
+
+        .nav-brand {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--text);
+            text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .nav-brand i { color: var(--primary); }
+
+        .nav-links {
+            display: flex; gap: 36px; list-style: none;
+        }
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute; bottom: -4px; left: 0; right: 0;
+            height: 2px; background: var(--primary); border-radius: 2px;
+        }
+
+        .btn-nav {
+            padding: 9px 22px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .btn-nav:hover { border-color: var(--primary); background: rgba(0,229,255,0.05); }
+
+        /* ── HAMBURGER ── */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+        /* ── CONTAINER ── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 140px 24px 80px;
+            position: relative;
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(124,58,237,0.12);
+            border: 1px solid rgba(124,58,237,0.3);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 32px;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        h1.hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            animation: fadeUp 0.8s 0.1s ease both;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            max-width: 560px;
+            color: var(--muted);
+            font-size: 1.15rem;
+            font-weight: 300;
+            margin-top: 24px;
+            animation: fadeUp 0.8s 0.2s ease both;
+        }
+
+        .hero-scroll {
+            margin-top: 64px;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            color: var(--muted); font-size: 0.8rem; letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: fadeUp 0.8s 0.5s ease both;
+        }
+        .hero-scroll .arrow {
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            animation: bounceY 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceY {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── SECTION BASE ── */
+        section { padding: 100px 0; }
+        .section-label {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--primary);
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+
+        /* ── MISSION / VISION ── */
+        .mv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--border);
+        }
+
+        .mv-card {
+            background: var(--surface);
+            padding: 56px 48px;
+            transition: background 0.3s;
+        }
+        .mv-card:hover { background: var(--surface2); }
+
+        .mv-icon {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            background: rgba(0,229,255,0.08);
+            border: 1px solid rgba(0,229,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 28px;
+        }
+        .mv-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .mv-card p { color: var(--muted); font-weight: 300; line-height: 1.75; }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 80px 0;
+        }
+        .stat-item {
+            background: var(--surface);
+            padding: 40px 32px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        .stat-item:hover { background: var(--surface2); }
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .stat-label { font-size: 0.85rem; color: var(--muted); font-weight: 400; }
+
+        /* ── TECH STACK ── */
+        .tech-section { padding: 100px 0; }
+
+        .tech-heading-row {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            margin-bottom: 56px;
+            flex-wrap: wrap; gap: 24px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .tech-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
+            cursor: default;
+            transition: border-color 0.25s, background 0.25s, transform 0.2s, color 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .tech-pill::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(124,58,237,0.06));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .tech-pill:hover {
+            border-color: rgba(0,229,255,0.4);
+            transform: translateY(-3px);
+            color: var(--primary);
+        }
+        .tech-pill:hover::before { opacity: 1; }
+
+        /* ── TIMELINE ── */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 56px;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--border) 15%, var(--border) 85%, transparent);
+        }
+
+        .tl-item {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 56px;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateX(-24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .tl-item.visible { opacity: 1; transform: translateX(0); }
+
+        .tl-year-wrap {
+            display: flex; flex-direction: column; align-items: center;
+            min-width: 112px;
+        }
+        .tl-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0,229,255,0.15);
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+        .tl-year {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .tl-body {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 32px 36px;
+            flex: 1;
+            transition: border-color 0.25s;
+        }
+        .tl-body:hover { border-color: rgba(0,229,255,0.25); }
+        .tl-body h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .tl-body p { color: var(--muted); font-size: 0.95rem; font-weight: 300; }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 64px 0 32px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 56px;
+        }
+
+        .footer-brand p { color: var(--muted); font-size: 0.9rem; margin-top: 16px; max-width: 280px; line-height: 1.7; font-weight: 300; }
+
+        .footer-col h4 {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .footer-col a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 400; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--text); }
+
+        .social-icons { display: flex; gap: 12px; }
+        .social-icon {
+            width: 38px; height: 38px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .social-icon:hover { border-color: var(--primary); color: var(--primary); }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 28px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+        }
+        .footer-bottom p { color: var(--muted); font-size: 0.82rem; }
+
+        /* ── INTERSECTION OBSERVER REVEALS ── */
+        .reveal {
+            opacity: 0; transform: translateY(32px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            nav { padding: 16px 24px; }
+            .nav-links, .btn-nav { display: none; }
+            .hamburger { display: flex; }
+            .nav-links.open {
+                display: flex; flex-direction: column;
+                position: fixed; inset: 72px 0 0 0;
+                background: rgba(5,8,16,0.98);
+                backdrop-filter: blur(20px);
+                align-items: center; justify-content: center;
+                gap: 32px; z-index: 99;
+            }
+            .nav-links.open a { font-size: 1.3rem; }
+            .mv-grid { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .timeline::before { left: 40px; }
+            .tl-year-wrap { min-width: 80px; }
+        }
+
+        @media (max-width: 600px) {
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .tl-item { flex-direction: column; gap: 16px; }
+            .timeline::before { display: none; }
+            .tl-year-wrap { flex-direction: row; gap: 12px; align-items: center; }
+            .mv-card { padding: 36px 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BLOBS -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- NAV -->
+    <nav id="navbar">
+        <a href="/" class="nav-brand">
+            <i class="fas fa-brain"></i> Smart Vision AI
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/">Home</a></li>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/detection">AI Engine</a></li>
+            <li><a href="/about" class="active">Platform</a></li>
+            <li><a href="/contact">Support</a></li>
+        </ul>
+        <div style="display:flex;gap:12px;align-items:center;">
+            <a href="/login_page" class="btn-nav">Login</a>
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container" style="display:flex;flex-direction:column;align-items:center;">
+            <div class="hero-tag"><i class="fas fa-circle-dot" style="font-size:0.6rem;color:var(--primary)"></i> Est. 2022 · Mumbai, India</div>
+            <h1 class="hero-title">Pioneering<br><span class="gradient-text">Intelligence</span></h1>
+            <p class="hero-sub">Building the neural infrastructure for a sustainable, waste-free future — one pixel at a time.</p>
+            <div class="hero-scroll">
+                <span>Scroll</span>
+                <div class="arrow"><i class="fas fa-chevron-down" style="font-size:0.75rem;color:var(--muted)"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISSION / VISION -->
+    <section>
+        <div class="container">
+            <p class="section-label reveal">Our purpose</p>
+            <h2 class="section-title reveal reveal-delay-1" style="max-width:480px;margin-bottom:48px;">What drives<br>everything we build</h2>
+            <div class="mv-grid reveal reveal-delay-2">
+                <div class="mv-card">
+                    <div class="mv-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>Our Mission</h3>
+                    <p>To democratize industrial-grade material classification using accessible AI, enabling businesses of all sizes to participate in the circular economy.</p>
+                </div>
+                <div class="mv-card">
+                    <div class="mv-icon" style="background:rgba(240,171,252,0.08);border-color:rgba(240,171,252,0.2);color:var(--accent)"><i class="fas fa-eye"></i></div>
+                    <h3>Our Vision</h3>
+                    <p>A world where every material atom is tracked, classified, and routed to its highest-value reuse through planetary-scale computer vision.</p>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-bar reveal">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="98">0%</div>
+                    <div class="stat-label">Classification Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="50">0+</div>
+                    <div class="stat-label">Enterprise Clients</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="12">0M</div>
+                    <div class="stat-label">Items Classified</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="3">0</div>
+                    <div class="stat-label">Years of Research</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECH STACK -->
+    <section class="tech-section">
+        <div class="container">
+            <div class="tech-heading-row">
+                <div>
+                    <p class="section-label reveal">Under the hood</p>
+                    <h2 class="section-title reveal reveal-delay-1">Technology Stack</h2>
+                </div>
+                <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:320px;font-size:0.95rem;font-weight:300;">Our neural networks are trained on multi-spectral datasets and optimized for edge performance.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-pill reveal">TensorFlow</div>
+                <div class="tech-pill reveal reveal-delay-1">YOLOv8</div>
+                <div class="tech-pill reveal reveal-delay-2">PyTorch</div>
+                <div class="tech-pill reveal">OpenCV</div>
+                <div class="tech-pill reveal reveal-delay-1">Flask</div>
+                <div class="tech-pill reveal reveal-delay-2">Docker</div>
+                <div class="tech-pill reveal">Google Gemini</div>
+                <div class="tech-pill reveal reveal-delay-1">CUDA</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section>
+        <div class="container">
+            <p class="section-label reveal">Our journey</p>
+            <h2 class="section-title reveal reveal-delay-1" style="margin-bottom:64px;">Evolution</h2>
+            <div class="timeline">
+                <div class="tl-item">
+                    <div class="tl-year-wrap">
+                        <div class="tl-dot"></div>
+                        <div class="tl-year">2022</div>
+                    </div>
+                    <div class="tl-body">
+                        <h3>Neural Inception</h3>
+                        <p>Core R&D phase focused on custom YOLO architectures for granular material segmentation. Dataset curation across 40+ waste categories.</p>
+                    </div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-year-wrap">
+                        <div class="tl-dot" style="background:var(--secondary);box-shadow:0 0 0 4px rgba(124,58,237,0.15)"></div>
+                        <div class="tl-year" style="color:var(--accent)">2023</div>
+                    </div>
+                    <div class="tl-body">
+                        <h3>Industrial Alpha</h3>
+                        <p>First deployment in high-throughput recycling facilities, achieving 98%+ precision on live conveyor belt streams under variable lighting conditions.</p>
+                    </div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-year-wrap">
+                        <div class="tl-dot" style="background:var(--accent);box-shadow:0 0 0 4px rgba(240,171,252,0.15)"></div>
+                        <div class="tl-year" style="color:var(--accent)">2024</div>
+                    </div>
+                    <div class="tl-body">
+                        <h3>SaaS Expansion</h3>
+                        <p>Launch of the cloud-based platform and integration with Google Gemini for smart recommendations, real-time dashboards, and enterprise APIs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="nav-brand"><i class="fas fa-brain"></i> Smart Vision AI</a>
+                    <p>Leading the transition to a circular economy through advanced material recognition and AI-powered sustainability tools.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="/detection">AI Engine</a></li>
+                        <li><a href="/features">Features</a></li>
+                        <li><a href="/dashboard">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Social</h4>
+                    <div class="social-icons">
+                        <a href="https://x.com/elonm6025" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/in/aditya-jadhav-663951281" target="_blank" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/Adityajadhav85755" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="https://www.instagram.com/adii4_8/?hl=en" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Smart Vision AI. All rights reserved.</p>
+                <p>Crafted with <i class="fas fa-heart" style="color:#f43f5e;font-size:0.75rem"></i> for a circular economy</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').style.padding =
+                window.scrollY > 60 ? '12px 40px' : '20px 40px';
+        });
+
+        // Intersection Observer for reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal, .tl-item').forEach(el => observer.observe(el));
+
+        // Counter animation
+        function animateCounter(el, target, suffix) {
+            let start = 0;
+            const duration = 1800;
+            const step = timestamp => {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const val = Math.round(ease * target);
+                el.textContent = val + suffix;
+                if (progress < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const nums = e.target.querySelectorAll('[data-target]');
+                    nums.forEach(n => {
+                        const t = parseInt(n.dataset.target);
+                        const suffix = n.textContent.replace(/\d+/, '').trim();
+                        animateCounter(n, t, suffix);
+                    });
+                    statsObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.stats-bar').forEach(el => statsObserver.observe(el));
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# data.yaml
+# Paths (relative to this file or absolute)
+path: ./data  # dataset root dir
+train: images/train  # train images (relative to 'path')
+val: images/val  # val images (relative to 'path')
+
+# Classes
+nc: 35  # number of classes
+names: [
+  'Person', 'Chair', 'Toothbrush', 'Knife', 'Bottle',
+  'Cup', 'Spoon', 'Bench', 'Refrigerator', 'Fork',
+  'Bus', 'Toilet', 'Bicycle', 'Airplane', 'Truck',
+  'Motorcycles', 'Oven', 'Dog', 'Bed', 'Cat',
+  'Traffic Light', 'Currency', 'Face', 'Stop Sign', 'Car',
+  'Barriers', 'Path Holes', 'Stairs', 'Train', 'Bin',
+  'Blind Stick', 'Men Sign', 'Cell Phone', 'Women Sign', 'Tap'
+]
