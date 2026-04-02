@@ -56,6 +56,34 @@
         .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
         .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
 
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed; 
+            top: 68px; 
+            left: 0; 
+            right: 0; 
+            background: rgba(5,8,16,0.97);
+            padding: 20px;
+            flex-direction: column; 
+            gap: 4px;
+            z-index: 100;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px; 
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .mobile-nav a:hover, .mobile-nav a.active { 
+            color: var(--primary-light); 
+            background: rgba(99,102,241,0.07); 
+        }
+
         /* LAYOUT */
         .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
@@ -213,9 +241,18 @@
         </div>
     </nav>
 
+    <div class="mobile-nav" id="mobileNav">
+        <a href="/">Home</a>
+        <a href="/features" class="active">Features</a>
+        <a href="/detection">AI Engine</a>
+        <a href="/about">Platform</a>
+        <a href="/contact">Support</a>
+        <a href="/login_page" style="color:var(--c1)!important;background:rgba(0,229,255,.07)!important;margin-top:8px;">→ Login</a>
+    </div>
+
     <section class="hero">
         <div class="hero-tag"><i class="fas fa-headset" style="font-size:0.65rem"></i>&nbsp; Global Support</div>
-        <h1 class="ht">We're Here<br>to <span class="gt">Help You</span></h1>
+        <h1 class="ht">We're Here <span class="gt">to Help You</span></h1>
         <p class="hero-sub">Our engineering and sustainability teams are ready to accelerate your circular economy transition.</p>
     </section>
 
@@ -397,7 +434,10 @@
 
     <script>
         // NAV
-        function toggleMenu() { document.getElementById('nl').classList.toggle('open'); }
+        function toggleMenu() { 
+            document.getElementById('nl').classList.toggle('open'); 
+            document.getElementById('mobileNav').classList.toggle('open'); 
+        }
         window.addEventListener('scroll', () => {
             document.getElementById('nav').style.padding = window.scrollY > 60 ? '12px 48px' : '20px 48px';
         });

@@ -14,8 +14,7 @@ import json
 import re
 from datetime import datetime
 # ==================== GEMINI AI CONFIGURATION ====================
-GEMINI_API_KEY = "AIzaSyDVRKiDcrHcthpXp2qjDQwO_0xLTQ5z6J4"  # Replace with valid key␍
-# Load API keys from environment variables for deployment security
+# Secure API key loading - no hardcoded keys
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 if not GEMINI_API_KEY:
     print("⚠️ GEMINI_API_KEY not found in environment variables")
@@ -126,51 +125,73 @@ Return ONLY valid JSON in this exact format, no other text:
         }}
     ]
 }}"""
-        # Get AI response
-        response = gemini_model.generate_content(prompt)
-        print(f"📥 Received response from Gemini")
-        if not response or not response.text:
-            print("❌ Empty response from Gemini")
-            return None
-        print(f"📄 Response preview: {response.text[:200]}...")
-        
-        # Check for quota exceeded or rate limit errors
-        response_text = response.text.lower()
-        if any(keyword in response_text for keyword in ['quota', 'rate limit', 'exceeded', 'limit', 'retry', 'blocked']):
-            print("❌ Gemini API quota/rate limit exceeded")
-            return None
-        
-        # Parse JSON from response with better error handling
-        json_match = re.search(r'\{.*\}', response.text, re.DOTALL)
-        if json_match:
-            json_str = json_match.group()
-            try:
-                # Validate JSON structure before parsing
-                if not json_str.strip().startswith('{') or not json_str.strip().endswith('}'):
-                    print("❌ Invalid JSON structure")
-                    return None
-                
-                recommendations = json.loads(json_str)
-                objects = recommendations.get('objects', [])
-                
-                # Validate the structure of returned objects
-                if not isinstance(objects, list):
-                    print("❌ Invalid objects structure in JSON")
-                    return None
-                
-                print(f"✅ Successfully parsed JSON with {len(objects)} objects")
-                return objects
-                
-            except json.JSONDecodeError as e:
-                print(f"❌ JSON parse error: {e}")
-                print(f"Raw JSON string: {json_str[:200]}")
+        # Get AI response with timeout protection
+        try:
+            response = gemini_model.generate_content(prompt)
+            print(f"📥 Received response from Gemini")
+            
+            if not response or not hasattr(response, 'text'):
+                print("❌ Invalid response structure from Gemini")
                 return None
-        else:
-            print("❌ No JSON found in response")
+                
+            if not response.text:
+                print("❌ Empty response from Gemini")
+                return None
+                
+            response_text = response.text.strip()
+            if not response_text:
+                print("❌ Empty response text from Gemini")
+                return None
+                
+            print(f"📄 Response preview: {response_text[:200]}...")
+            
+            # Check for quota exceeded or rate limit errors
+            if any(keyword in response_text.lower() for keyword in ['quota', 'rate limit', 'exceeded', 'limit', 'retry', 'blocked']):
+                print("❌ Gemini API quota/rate limit exceeded")
+                return None
+            
+            # Parse JSON from response with better error handling
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
+                json_str = json_match.group()
+                try:
+                    # Validate JSON structure before parsing
+                    json_str = json_str.strip()
+                    if not json_str.startswith('{') or not json_str.endswith('}'):
+                        print("❌ Invalid JSON structure")
+                        return None
+                    
+                    # Additional validation for common JSON errors
+                    if json_str.count('{') != json_str.count('}') or json_str.count('[') != json_str.count(']'):
+                        print("❌ Unbalanced JSON brackets")
+                        return None
+                    
+                    recommendations = json.loads(json_str)
+                    objects = recommendations.get('objects', [])
+                    
+                    # Validate the structure of returned objects
+                    if not isinstance(objects, list):
+                        print("❌ Invalid objects structure in JSON")
+                        return None
+                    
+                    print(f"✅ Successfully parsed JSON with {len(objects)} objects")
+                    return objects
+                    
+                except json.JSONDecodeError as e:
+                    print(f"❌ JSON parse error: {e}")
+                    print(f"Raw response: {response_text[:300]}...")
+                    return None
+                except Exception as parse_error:
+                    print(f"❌ JSON parsing failed: {parse_error}")
+                    return None
+            else:
+                print("❌ No JSON found in response")
+                print(f"Raw response: {response_text[:300]}...")
+                return None
+                
+        except Exception as e:
+            print(f"❌ AI recommendation error: {e}")
             return None
-    except Exception as e:
-        print(f"❌ AI recommendation error: {e}")
-        return None
 def get_fallback_recommendations(detected_objects):
     """Fallback recommendations if AI fails"""
     recommendations = []
@@ -620,7 +641,7 @@ def upload_file():
                     print(f"❌ Model loading failed: {str(model_error)}")
                     return jsonify({'error': f'Model loading failed: {str(model_error)}'}), 500
                 
-                # Process image with optimized settings
+                # Process image with optimized settings for Render
                 try:
                     print("🔍 Starting image analysis...")
                     # Use smaller image size for faster processing
@@ -628,19 +649,26 @@ def upload_file():
                     if img is None:
                         return jsonify({'error': 'Could not read uploaded image'}), 500
                     
-                    # Resize large images to reduce memory usage
+                    # Resize large images to reduce memory usage (Render has limited resources)
                     height, width = img.shape[:2]
-                    if max(height, width) > 1024:
-                        scale = 1024 / max(height, width)
+                    max_size = 800  # Reduced from 1024 for Render
+                    if max(height, width) > max_size:
+                        scale = max_size / max(height, width)
                         new_width = int(width * scale)
                         new_height = int(height * scale)
                         img = cv2.resize(img, (new_width, new_height))
-                        print(f"🔍 Image resized to {new_width}x{new_height}")
+                        print(f"🔍 Image resized to {new_width}x{new_height} for Render")
                     
                     # Run inference with optimized settings
-                    results = model(img, verbose=False)
+                    print("🔄 Running YOLO inference...")
+                    results = model(img, verbose=False, max_det=10)  # Limit detections for performance
                     detections, summary = analyze_scene(results)
                     print(f"✅ Analysis completed: {len(detections)} objects detected")
+                    
+                    # Force garbage collection to free memory
+                    import gc
+                    gc.collect()
+                    
                 except Exception as analysis_error:
                     print(f"❌ Detection failed: {str(analysis_error)}")
                     return jsonify({'error': f'Detection failed: {str(analysis_error)}'}), 500
@@ -648,7 +676,7 @@ def upload_file():
                 # Create annotated image (optional - skip if too many detections)
                 annotated_path = None
                 try:
-                    if len(detections) <= 20:  # Only annotate if reasonable number of objects
+                    if len(detections) <= 10:  # Reduced from 20 for Render performance
                         for det in detections:
                             x1, y1, x2, y2 = det['bbox']
                             color = (0, 255, 0) if det['status'] == 'usable' else (0, 0, 255) if det['status'] == 'obstacle' else (255, 255, 0)
@@ -659,11 +687,26 @@ def upload_file():
                         annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], f"annotated_{filename}")
                         cv2.imwrite(annotated_path, img)
                         print(f"✅ Annotated image saved")
+                        
+                        # Clear image from memory
+                        del img
+                        import gc
+                        gc.collect()
                     else:
-                        print(f" Too many detections ({len(detections)}), skipping annotation")
+                        print(f"⚠️ Too many detections ({len(detections)}), skipping annotation")
+                        # Clear image from memory anyway
+                        del img
+                        import gc
+                        gc.collect()
                 except Exception as img_error:
-                    print(f" Image annotation failed: {str(img_error)}")
-                    # Continue without annotation
+                    print(f"❌ Image annotation failed: {str(img_error)}")
+                    # Clear image from memory
+                    try:
+                        del img
+                        import gc
+                        gc.collect()
+                    except:
+                        pass
                 
                 # Create base64 response with comprehensive error handling
                 try:
