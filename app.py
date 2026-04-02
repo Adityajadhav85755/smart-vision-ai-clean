@@ -14,56 +14,75 @@ import json
 import re
 from datetime import datetime
 # ==================== GEMINI AI CONFIGURATION ====================
-GEMINI_API_KEY = ","  # Replace with valid key
+# Load API keys from environment variables for deployment security
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+if not GEMINI_API_KEY:
+    print("⚠️ GEMINI_API_KEY not found in environment variables")
+    print("📝 Please set GEMINI_API_KEY environment variable for deployment")
+    print("🔧 For local development, create config.py with API_CONFIG")
+    try:
+        from static.js.config import API_CONFIG
+        GEMINI_API_KEY = API_CONFIG.get('GEMINI_API_KEY', '')
+        if GEMINI_API_KEY:
+            print("✅ Using Gemini API key from config.js")
+    except ImportError:
+        print("❌ No Gemini API key available - AI features will be disabled")
 print("=" * 60)
 print("🔧 GEMINI INITIALIZATION")
 print("=" * 60)
-try:
-    genai.configure(api_key=GEMINI_API_KEY)
-    print("✅ API Key configured successfully")
-    # List available models for debugging
-    print("\n📋 Available models:")
-    available_models = []
-    for m in genai.list_models():
-        print(f"  - {m.name}")
-        available_models.append(m.name)
-    # CORRECT model names - WITHOUT 'models/' prefix for your API version
-    model_names = [
-    'models/gemini-2.0-flash',      # Newer model
-    'models/gemini-2.0-flash-lite', # Lite version
-    'models/gemini-2.5-flash',      # Latest flash
-    'models/gemini-2.5-pro',        # Latest pro
-    'models/gemini-pro-latest',     # Latest pro version
-    'models/gemini-flash-latest',   # Latest flash version
-]
-    gemini_model = None
-    selected_model = None
-    for model_name in model_names:
-        # Check if model exists in available models
-        matching_models = [m for m in available_models if model_name in m]
-        if matching_models:
-            try:
-                full_model_name = matching_models[0]  # Use the full name from API
-                print(f"\n🔄 Trying model: {full_model_name}")
-                gemini_model = genai.GenerativeModel(full_model_name)
-                # Test with a simple prompt
-                test_response = gemini_model.generate_content("Say 'OK'")
-                if test_response and test_response.text:
-                    print(f"✅✅✅ SUCCESS! Using model: {full_model_name}")
-                    selected_model = full_model_name
-                    break
-                else:
-                    print(f"⚠️ Model {full_model_name} returned empty response")
+
+# Only initialize Gemini if API key is available
+if GEMINI_API_KEY and GEMINI_API_KEY != 'YOUR_NEW_GEMINI_API_KEY_HERE':
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        print("✅ API Key configured successfully")
+        # List available models for debugging
+        print("\n📋 Available models:")
+        available_models = []
+        for m in genai.list_models():
+            print(f"  - {m.name}")
+            available_models.append(m.name)
+        # CORRECT model names - WITHOUT 'models/' prefix for your API version
+        model_names = [
+        'models/gemini-2.0-flash',      # Newer model
+        'models/gemini-2.0-flash-lite', # Lite version
+        'models/gemini-2.5-flash',      # Latest flash
+        'models/gemini-2.5-pro',        # Latest pro
+        'models/gemini-pro-latest',     # Latest pro version
+        'models/gemini-flash-latest',   # Latest flash version
+        ]
+        gemini_model = None
+        selected_model = None
+        for model_name in model_names:
+            # Check if model exists in available models
+            matching_models = [m for m in available_models if model_name in m]
+            if matching_models:
+                try:
+                    full_model_name = matching_models[0]  # Use full name from API
+                    print(f"\n🔄 Trying model: {full_model_name}")
+                    gemini_model = genai.GenerativeModel(full_model_name)
+                    # Test with a simple prompt
+                    test_response = gemini_model.generate_content("Say 'OK'")
+                    if test_response and test_response.text:
+                        print(f"✅✅✅ SUCCESS! Using model: {full_model_name}")
+                        selected_model = full_model_name
+                        break
+                    else:
+                        print(f"⚠️ Model {full_model_name} returned empty response")
+                        gemini_model = None
+                except Exception as e:
+                    print(f"❌ Model {model_name} failed: {e}")
                     gemini_model = None
-            except Exception as e:
-                print(f"❌ Model {model_name} failed: {e}")
-                gemini_model = None
-        else:
-            print(f"⚠️ Model {model_name} not found in available models")
-    if gemini_model is None:
-        print("\n❌ No valid Gemini model found")
-except Exception as e:
-    print(f"\n❌ Gemini initialization error: {e}")
+            else:
+                print(f"⚠️ Model {model_name} not found in available models")
+        if gemini_model is None:
+            print("\n❌ No valid Gemini model found")
+    except Exception as e:
+        print(f"\n❌ Gemini initialization error: {e}")
+        gemini_model = None
+else:
+    print("⚠️ Gemini API key not configured")
+    print("📝 AI recommendations will use fallback mode")
     gemini_model = None
 print("=" * 60)
 def get_smart_recommendations(detected_objects):
