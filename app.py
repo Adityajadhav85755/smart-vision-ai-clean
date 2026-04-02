@@ -14,7 +14,7 @@ import json
 import re
 from datetime import datetime
 # ==================== GEMINI AI CONFIGURATION ====================
-GEMINI_API_KEY = "AIzaSyATDU4sM8KhG3qOJnY2yoXOhTZcldlEIqU"  # Replace with valid key
+GEMINI_API_KEY = ","  # Replace with valid key
 print("=" * 60)
 print("🔧 GEMINI INITIALIZATION")
 print("=" * 60)
@@ -588,50 +588,66 @@ def upload_file():
                     print(f"❌ File save failed: {str(save_error)}")
                     return jsonify({'error': f'File save failed: {str(save_error)}'}), 500
                 
-                # Load model with timeout protection
+                # Load model with timeout protection (reuse global model)
                 try:
-                    model = load_model()
+                    global model
+                    if model is None:
+                        model = load_model()
                     if model is None:
                         return jsonify({'error': 'Model not available.'}), 500
-                    print(f"✅ Model loaded successfully")
+                    print(f"✅ Model ready")
                 except Exception as model_error:
                     print(f"❌ Model loading failed: {str(model_error)}")
                     return jsonify({'error': f'Model loading failed: {str(model_error)}'}), 500
                 
-                # Process image with timeout protection
+                # Process image with optimized settings
                 try:
                     print("🔍 Starting image analysis...")
-                    results = model(filepath)
+                    # Use smaller image size for faster processing
+                    img = cv2.imread(filepath)
+                    if img is None:
+                        return jsonify({'error': 'Could not read uploaded image'}), 500
+                    
+                    # Resize large images to reduce memory usage
+                    height, width = img.shape[:2]
+                    if max(height, width) > 1024:
+                        scale = 1024 / max(height, width)
+                        new_width = int(width * scale)
+                        new_height = int(height * scale)
+                        img = cv2.resize(img, (new_width, new_height))
+                        print(f"🔍 Image resized to {new_width}x{new_height}")
+                    
+                    # Run inference with optimized settings
+                    results = model(img, verbose=False)
                     detections, summary = analyze_scene(results)
                     print(f"✅ Analysis completed: {len(detections)} objects detected")
                 except Exception as analysis_error:
                     print(f"❌ Detection failed: {str(analysis_error)}")
                     return jsonify({'error': f'Detection failed: {str(analysis_error)}'}), 500
                 
-                # Create annotated image with error handling
+                # Create annotated image (optional - skip if too many detections)
+                annotated_path = None
                 try:
-                    img = cv2.imread(filepath)
-                    if img is None:
-                        return jsonify({'error': 'Could not read uploaded image'}), 500
-                    
-                    for det in detections:
-                        x1, y1, x2, y2 = det['bbox']
-                        color = (0, 255, 0) if det['status'] == 'usable' else (0, 0, 255) if det['status'] == 'obstacle' else (255, 255, 0)
-                        cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
-                        label = f"{det['class']} ({det['confidence']})"
-                        cv2.putText(img, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-                    
-                    annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], f"annotated_{filename}")
-                    cv2.imwrite(annotated_path, img)
-                    print(f"✅ Annotated image saved")
+                    if len(detections) <= 20:  # Only annotate if reasonable number of objects
+                        for det in detections:
+                            x1, y1, x2, y2 = det['bbox']
+                            color = (0, 255, 0) if det['status'] == 'usable' else (0, 0, 255) if det['status'] == 'obstacle' else (255, 255, 0)
+                            cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+                            label = f"{det['class']} ({det['confidence']})"
+                            cv2.putText(img, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                        
+                        annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], f"annotated_{filename}")
+                        cv2.imwrite(annotated_path, img)
+                        print(f"✅ Annotated image saved")
+                    else:
+                        print(f" Too many detections ({len(detections)}), skipping annotation")
                 except Exception as img_error:
-                    print(f"❌ Image annotation failed: {str(img_error)}")
+                    print(f" Image annotation failed: {str(img_error)}")
                     # Continue without annotation
                 
                 # Create base64 response with comprehensive error handling
                 try:
-                    annotated_path = os.path.join(app.config['UPLOAD_FOLDER'], f"annotated_{filename}")
-                    if os.path.exists(annotated_path):
+                    if annotated_path and os.path.exists(annotated_path):
                         with open(annotated_path, 'rb') as img_file:
                             img_base64 = base64.b64encode(img_file.read()).decode('utf-8')
                     else:
