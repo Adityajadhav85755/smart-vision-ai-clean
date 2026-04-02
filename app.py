@@ -14,6 +14,7 @@ import json
 import re
 from datetime import datetime
 # ==================== GEMINI AI CONFIGURATION ====================
+GEMINI_API_KEY = "AIzaSyDVRKiDcrHcthpXp2qjDQwO_0xLTQ5z6J4"  # Replace with valid key␍
 # Load API keys from environment variables for deployment security
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 if not GEMINI_API_KEY:
